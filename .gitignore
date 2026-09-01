@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.ipynb_checkpoints/
+
+data/raw/*
+data/processed/*
+
+.pytest_cache/
+.vscode/
