@@ -1,4 +1,7 @@
 import json
+from pathlib import Path
+import subprocess
+import sys
 
 from scripts.generate_chunk_manifest import (
     MANIFEST_FIELDS,
@@ -67,3 +70,18 @@ def test_build_manifest_uses_existing_chunk_fields_without_rechunking():
             "chunk_text": "Verified fixture chunk text.",
         }
     ]
+
+
+def test_generator_script_runs_from_repository_root_without_import_error():
+    repository_root = Path(__file__).resolve().parents[1]
+
+    result = subprocess.run(
+        [sys.executable, "scripts/generate_chunk_manifest.py"],
+        cwd=repository_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert "ModuleNotFoundError: No module named 'src'" not in result.stderr
+    assert "Source PDF not found: data/raw/paper1.pdf" in result.stderr

@@ -2,6 +2,16 @@
 
 import json
 from pathlib import Path
+import sys
+
+
+# Direct execution sets sys.path to scripts/, not the repository root.
+# Include the root so the existing src package is importable without requiring
+# callers to set PYTHONPATH or install the project.
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
 
 from src.chunking import chunk_documents
 from src.ingestion import extract_text_from_pdf
