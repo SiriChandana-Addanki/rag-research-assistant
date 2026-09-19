@@ -34,6 +34,8 @@ Implemented:
   page range, section, document ID, and chunk ID metadata.
 - `evaluation/retrieval_dataset.json` contains manually authored retrieval
   questions with expected section and page labels for one local paper.
+- `scripts/generate_chunk_manifest.py` projects the existing ingestion and
+  fixed-default chunking output into a deterministic chunk manifest.
 
 Not implemented yet: embeddings, vector retrieval, BM25, hybrid retrieval,
 reranking, generation, citations, and runtime observability.
@@ -43,7 +45,8 @@ reranking, generation, citations, and runtime observability.
 ### Decision
 
 Keep a version-controlled, question-level retrieval dataset and validate its
-schema in the test suite.
+schema in the test suite. Generate a tracked chunk manifest from the ignored
+local PDF before adding exact chunk-level relevance judgments.
 
 ### Reason
 
@@ -69,6 +72,30 @@ exact chunk-level Recall@K or MRR. Exact relevance judgments should be added
 after the chunking configuration is finalized and before retrieval strategies
 are compared.
 
+### Chunk-manifest workflow
+
+Chunk-level judgments need stable chunk IDs and the exact extracted text they
+refer to; section/page labels alone cannot verify that a chunk contains enough
+evidence for an answer. The manifest generator deliberately reuses
+`extract_text_from_pdf` and `chunk_documents` with their current defaults, so
+it does not define a second chunking configuration.
+
+With the local, ignored corpus available at `data/raw/paper1.pdf`, generate
+the tracked artifact with:
+
+```bash
+python scripts/generate_chunk_manifest.py
+```
+
+This writes `evaluation/chunk_manifest.json`, containing each chunk's document
+ID, chunk ID/index, page range, section, and exact chunk text. JSON is emitted
+in the chunking pipeline's order with stable indentation, making the artifact
+suitable for review and later relevance judgments. The manifest-schema test
+uses a temporary fixture PDF; it does **not** validate the absent real corpus.
+
+Do not add relevance judgments until the real-PDF manifest has been generated
+and each proposed mapping has been checked against its `chunk_text`.
+
 ## Local development
 
 Create an environment and install dependencies:
@@ -91,7 +118,10 @@ test suite.
 ## Known limitations
 
 - The evaluation dataset targets one paper and has question-level source-region
-  labels only.
+  labels only until the real local corpus is used to generate and review
+  `evaluation/chunk_manifest.json`.
+- This checkout does not contain `data/raw/paper1.pdf`; no real-corpus manifest
+  or chunk-level judgments have been generated here.
 - Extraction and chunking have unit coverage, but the local corpus is not
   version-controlled, so corpus-level ingestion has not been reproduced here.
 - No retrieval or generation quality, latency, token, or cost metrics have
