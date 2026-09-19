@@ -72,12 +72,15 @@ def test_build_manifest_uses_existing_chunk_fields_without_rechunking():
     ]
 
 
-def test_generator_script_runs_from_repository_root_without_import_error():
+def test_generator_script_resolves_src_from_an_isolated_working_directory(
+    tmp_path,
+):
     repository_root = Path(__file__).resolve().parents[1]
+    script_path = repository_root / "scripts" / "generate_chunk_manifest.py"
 
     result = subprocess.run(
-        [sys.executable, "scripts/generate_chunk_manifest.py"],
-        cwd=repository_root,
+        [sys.executable, str(script_path)],
+        cwd=tmp_path,
         capture_output=True,
         text=True,
         check=False,
