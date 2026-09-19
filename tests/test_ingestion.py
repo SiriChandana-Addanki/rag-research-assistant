@@ -1,18 +1,21 @@
-from pathlib import Path
+import pymupdf
 
 from src.ingestion import extract_text_from_pdf
 
 
-def test_pdf_ingestion():
-    pdf_path = Path("data/raw").glob("*.pdf")
-    pdf_path = next(pdf_path, None)
-
-    assert pdf_path is not None, "No PDF found in data/raw"
+def test_pdf_ingestion(tmp_path):
+    pdf_path = tmp_path / "sample.pdf"
+    document = pymupdf.open()
+    page = document.new_page()
+    page.insert_text((72, 72), "A short test document.")
+    document.save(pdf_path)
+    document.close()
 
     pages = extract_text_from_pdf(pdf_path)
 
-    assert len(pages) > 0
-    assert "text" in pages[0]
-    assert "metadata" in pages[0]
-    assert "source" in pages[0]["metadata"]
-    assert "page" in pages[0]["metadata"]
+    assert pages == [
+        {
+            "text": "A short test document.",
+            "metadata": {"source": "sample.pdf", "page": 1},
+        }
+    ]
