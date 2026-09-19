@@ -1,0 +1,138 @@
+[
+  {
+    "id": "q001",
+    "question": "What problem with conventional Retrieval-Augmented Generation does SELF-RAG aim to address?",
+    "relevant_sections": [
+      "ABSTRACT",
+      "INTRODUCTION"
+    ],
+    "relevant_pages": [1, 2]
+  },
+  {
+    "id": "q002",
+    "question": "Why can automatically adding a fixed number of retrieved passages actually make an LLM's responses worse?",
+    "relevant_sections": [
+      "ABSTRACT",
+      "INTRODUCTION"
+    ],
+    "relevant_pages": [1, 2]
+  },
+  {
+    "id": "q003",
+    "question": "How does SELF-RAG's retrieval strategy differ from the retrieval strategy used by conventional RAG?",
+    "relevant_sections": [
+      "INTRODUCTION",
+      "SELF-RAG: LEARNING TO RETRIEVE, GENERATE AND CRITIQUE"
+    ],
+    "relevant_pages": [1, 2, 3]
+  },
+  {
+    "id": "q004",
+    "question": "What mechanism allows SELF-RAG to determine during generation whether external information is actually needed?",
+    "relevant_sections": [
+      "INTRODUCTION",
+      "PROBLEM FORMALIZATION AND OVERVIEW",
+      "REFLECTION TOKENS"
+    ],
+    "relevant_pages": [1, 4, 20]
+  },
+  {
+    "id": "q005",
+    "question": "What are reflection tokens in SELF-RAG, and what are the four types used by the framework?",
+    "relevant_sections": [
+      "INTRODUCTION",
+      "PROBLEM FORMALIZATION AND OVERVIEW",
+      "REFLECTION TOKENS"
+    ],
+    "relevant_pages": [1, 4, 20]
+  },
+  {
+    "id": "q006",
+    "question": "How do the Retrieve, ISREL, ISSUP, and ISUSE reflection signals contribute to the SELF-RAG inference process?",
+    "relevant_sections": [
+      "PROBLEM FORMALIZATION AND OVERVIEW",
+      "REFLECTION TOKENS"
+    ],
+    "relevant_pages": [4, 20]
+  },
+  {
+    "id": "q007",
+    "question": "When SELF-RAG decides that retrieval is necessary, what sequence of steps does it perform before selecting the final generated segment?",
+    "relevant_sections": [
+      "PROBLEM FORMALIZATION AND OVERVIEW",
+      "SELF-RAG INFERENCE"
+    ],
+    "relevant_pages": [4, 6]
+  },
+  {
+    "id": "q008",
+    "question": "How does SELF-RAG's treatment of retrieved passages go beyond simply ranking them by retrieval relevance?",
+    "relevant_sections": [
+      "PROBLEM FORMALIZATION AND OVERVIEW",
+      "SELF-RAG INFERENCE"
+    ],
+    "relevant_pages": [4, 6]
+  },
+  {
+    "id": "q009",
+    "question": "How can SELF-RAG change the balance between factual grounding and generation quality at inference time without retraining the model?",
+    "relevant_sections": [
+      "SELF-RAG INFERENCE"
+    ],
+    "relevant_pages": [6]
+  },
+  {
+    "id": "q010",
+    "question": "How are reflection tokens produced and incorporated into the training data before the final SELF-RAG generator is trained?",
+    "relevant_sections": [
+      "SELF-RAG TRAINING",
+      "TRAINING THE CRITIC MODEL",
+      "TRAINING THE GENERATOR MODEL"
+    ],
+    "relevant_pages": [5, 6]
+  },
+  {
+    "id": "q011",
+    "question": "How does SELF-RAG's offline critic-based training approach differ from PPO-based reinforcement learning approaches such as RLHF?",
+    "relevant_sections": [
+      "TRAINING AND GENERATING WITH CRITICS",
+      "SELF-RAG TRAINING"
+    ],
+    "relevant_pages": [3, 6]
+  },
+  {
+    "id": "q012",
+    "question": "What datasets and evaluation metrics did the authors use to evaluate SELF-RAG across closed-set, short-form, and long-form generation tasks?",
+    "relevant_sections": [
+      "TASKS AND DATASETS"
+    ],
+    "relevant_pages": [6, 7]
+  },
+  {
+    "id": "q013",
+    "question": "On the ASQA task, what citation precision and citation recall did SELF-RAG 7B and SELF-RAG 13B achieve?",
+    "relevant_sections": [
+      "EXPERIMENTAL SETTINGS",
+      "RESULTS AND ANALYSIS"
+    ],
+    "relevant_pages": [7, 8]
+  },
+  {
+    "id": "q014",
+    "question": "What do the ablation results reveal about the importance of retrieval relevance and ISSUP-based support assessment compared with simply using the top retrieved passage?",
+    "relevant_sections": [
+      "RESULTS AND ANALYSIS",
+      "ANALYSIS"
+    ],
+    "relevant_pages": [8, 9]
+  },
+  {
+    "id": "q015",
+    "question": "Did SELF-RAG train its generator using PPO-based reinforcement learning? If not, what training approach did the authors use instead?",
+    "relevant_sections": [
+      "TRAINING AND GENERATING WITH CRITICS",
+      "TRAINING THE GENERATOR MODEL"
+    ],
+    "relevant_pages": [3, 5, 6]
+  }
+]
