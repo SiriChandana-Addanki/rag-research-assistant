@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 import pytest
 from src.evaluation import evaluate_all,validate_judgments
@@ -17,7 +18,9 @@ def test_retrieval_metrics_are_bounded():
  for values in evaluate_all().values(): assert all(0<=x<=1 for x in values.values())
 def test_grounded_pipeline_uses_retrieved_citations(chunks):
  class Provider:
-  def generate(self, prompt, timeout_seconds): return 'Grounded fixture.'
+  def generate(self, prompt, timeout_seconds):
+   citations=[{"document_id":document,"page":int(page),"chunk_id":chunk} for document,chunk,page in re.findall(r'document_id: (.+)\nchunk_id: (.+)\npage: (\d+)',prompt)[:2]]
+   return json.dumps({"answer":"Grounded fixture.","citations":citations})
  p=RAGPipeline(chunks,provider=Provider())
  out=p.answer('What are reflection tokens?',2); assert out['answer']=='Grounded fixture.' and len(out['citations'])==2
  with pytest.raises(ValueError): validate_citations([Citation('paper1',1,'missing')],[])
@@ -35,7 +38,8 @@ def test_pipeline_retries_timeouts_and_rejects_malformed_provider_response(chunk
   def generate(self, prompt, timeout_seconds):
    self.calls+=1
    if self.calls==1: raise TimeoutError()
-   return 'Recovered.'
+   document,chunk,page=re.findall(r'document_id: (.+)\nchunk_id: (.+)\npage: (\d+)',prompt)[0]
+   return json.dumps({"answer":"Recovered.","citations":[{"document_id":document,"page":int(page),"chunk_id":chunk}]})
  provider=RetryingProvider()
  assert RAGPipeline(chunks,provider=provider,retries=1).answer('reflection tokens')['answer']=='Recovered.'
  class MalformedProvider:
