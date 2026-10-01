@@ -1,6 +1,6 @@
 """Local lexical retrieval and optional sentence-transformer semantic retrieval."""
 from __future__ import annotations
-import json, math, re
+import hashlib, json, math, re
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -59,16 +59,38 @@ class BM25Retriever:
     def search(self, query, k=5): return rank(self.chunks, self.scores(query), k)
 class SemanticRetriever:
     """True neural semantic retrieval, loaded lazily to keep lexical use dependency-free."""
-    def __init__(self, chunks, model_name="sentence-transformers/all-MiniLM-L6-v2", batch_size=32, encoder=None):
+    def __init__(self, chunks, model_name="sentence-transformers/all-MiniLM-L6-v2", batch_size=32, encoder=None, artifact_path=None):
         self.chunks, self.model_name, self.batch_size = chunks, model_name, batch_size
+        if batch_size <= 0: raise ValueError("batch_size must be positive")
         if encoder is None:
             try:
                 from sentence_transformers import SentenceTransformer
             except ImportError as error:
                 raise RuntimeError("sentence-transformers is required for SemanticRetriever") from error
             encoder = SentenceTransformer(model_name)
-        self.encoder=encoder; self.embeddings=self._encode([c["chunk_text"] for c in chunks])
-    def _encode(self, texts): return self.encoder.encode(texts, batch_size=self.batch_size, normalize_embeddings=True, show_progress_bar=False)
+        self.encoder=encoder
+        self.artifact_path=Path(artifact_path) if artifact_path else None
+        self.embeddings=self._load_or_encode([c["chunk_text"] for c in chunks])
+    def _fingerprint(self, texts):
+        payload=json.dumps({"model_name":self.model_name,"texts":texts}, ensure_ascii=False, separators=(",", ":"))
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    def _normalize_vector(self, vector):
+        values=[float(value) for value in vector]; magnitude=math.sqrt(sum(value*value for value in values))
+        return [value/magnitude for value in values] if magnitude else values
+    def _encode(self, texts):
+        vectors=self.encoder.encode(texts, batch_size=self.batch_size, normalize_embeddings=True, show_progress_bar=False)
+        return [self._normalize_vector(vector) for vector in vectors]
+    def _load_or_encode(self, texts):
+        fingerprint=self._fingerprint(texts)
+        if self.artifact_path and self.artifact_path.is_file():
+            cached=json.loads(self.artifact_path.read_text(encoding="utf-8"))
+            if cached.get("fingerprint") == fingerprint:
+                return cached["embeddings"]
+        embeddings=self._encode(texts)
+        if self.artifact_path:
+            self.artifact_path.parent.mkdir(parents=True, exist_ok=True)
+            self.artifact_path.write_text(json.dumps({"fingerprint":fingerprint,"embeddings":embeddings})+"\n", encoding="utf-8")
+        return embeddings
     def scores(self, query):
         if not query.strip(): raise ValueError("query must not be empty")
         query_vector=self._encode([query])[0]; return [cosine(query_vector, vector) for vector in self.embeddings]

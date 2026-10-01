@@ -15,7 +15,10 @@ def metrics(retriever,dataset,judgments):
   for k in KS: hits[k]+=bool(set(got[:k])&relevant)
   rr+=next((1/(i+1) for i,x in enumerate(got) if x in relevant),0)
  n=len(dataset); return {**{f'recall@{k}':hits[k]/n for k in KS},'mrr':rr/n}
+def load_evaluation_inputs(manifest='evaluation/chunk_manifest.json',dataset='evaluation/retrieval_dataset.json',judgments='evaluation/relevance_judgments.json'):
+ c=load_manifest(manifest); d=json.loads(Path(dataset).read_text()); j=json.loads(Path(judgments).read_text()); validate_judgments(j,d,c)
+ return c,d,j
 def evaluate_all(manifest='evaluation/chunk_manifest.json',dataset='evaluation/retrieval_dataset.json',judgments='evaluation/relevance_judgments.json'):
  from src.retrieval import TfidfRetriever,BM25Retriever,HybridRetriever
- c=load_manifest(manifest); d=json.loads(Path(dataset).read_text()); j=json.loads(Path(judgments).read_text()); validate_judgments(j,d,c)
+ c,d,j=load_evaluation_inputs(manifest,dataset,judgments)
  return {name:metrics(cls(c),d,j) for name,cls in [('tfidf',TfidfRetriever),('bm25',BM25Retriever),('hybrid',HybridRetriever)]}
