@@ -60,7 +60,7 @@ def generate_manifest(
 
     if not pdf_path.is_file():
         raise FileNotFoundError(
-            f"Source PDF not found: {pdf_path}. "
+            f"Source PDF not found: {pdf_path.as_posix()}. "
             "Provide the ignored local corpus before generating the manifest."
         )
 
