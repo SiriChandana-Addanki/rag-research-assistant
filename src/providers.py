@@ -33,24 +33,29 @@ def estimate_cost(usage):
 
 class GeminiProvider:
     """Official Google Gen AI SDK adapter; API keys never enter prompts or logs."""
-    def __init__(self, api_key=None, model_name=None, client=None):
+    def __init__(self, api_key=None, model_name=None, client=None, client_factory=None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key: raise ValueError("GEMINI_API_KEY is required")
         self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-        if client is None:
+        self.client = client
+        self._client_factory = client_factory
+        if client is None and client_factory is None:
             try:
                 from google import genai
             except ImportError as error:
                 raise RuntimeError("google-genai is required for GeminiProvider") from error
-            client = genai.Client(api_key=self.api_key)
-        self.client = client
+            # `http_options` belongs on Client, not Models.generate_content.
+            self._client_factory = lambda timeout: genai.Client(
+                api_key=self.api_key,
+                http_options={"timeout": int(timeout * 1000)},
+            )
 
     def generate(self, prompt, timeout_seconds):
         try:
-            response = self.client.models.generate_content(
+            client = self.client or self._client_factory(timeout_seconds)
+            response = client.models.generate_content(
                 model=self.model_name, contents=prompt,
                 config={"response_mime_type": "application/json"},
-                http_options={"timeout": int(timeout_seconds * 1000)},
             )
         except Exception as error:
             name = type(error).__name__.lower()

@@ -13,13 +13,17 @@ def payload(citations=None): return json.dumps({"answer":"Evidence-based answer.
 def test_gemini_requires_key(monkeypatch):
  monkeypatch.delenv("GEMINI_API_KEY",raising=False)
  with pytest.raises(ValueError,match="GEMINI_API_KEY"): GeminiProvider()
-def test_gemini_normalizes_mocked_sdk_response():
+def test_gemini_configures_timeout_on_client_not_generate_content():
  class Models:
-  def generate_content(self,**kwargs):
-   assert kwargs["http_options"]["timeout"]==2500
+  def generate_content(self,model,contents,config):
+   assert model=="gemini-2.5-flash" and contents=="prompt"
+   assert config=={"response_mime_type":"application/json"}
    return type("R",(),{"text":payload(),"usage_metadata":type("U",(),{"prompt_token_count":3,"candidates_token_count":4,"total_token_count":7})()})()
- provider=GeminiProvider(api_key="not-a-secret",client=type("C",(),{"models":Models()})())
+ client=type("C",(),{"models":Models()})()
+ configured=[]
+ provider=GeminiProvider(api_key="not-a-secret",client_factory=lambda timeout: configured.append(timeout) or client)
  response=provider.generate("prompt",2.5)
+ assert configured==[2.5]
  assert response.token_usage=={"prompt_tokens":3,"completion_tokens":4,"total_tokens":7}
 def test_pipeline_rejects_invalid_model_citation_and_secret_safe_log(caplog):
  class Provider:
