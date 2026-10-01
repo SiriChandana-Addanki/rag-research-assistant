@@ -1,0 +1,17 @@
+[
+ {"question_id":"q001","relevant_chunk_ids":["paper1_c0000","paper1_c0002","paper1_c0005"],"judgment_basis":"Direct discussion of conventional RAG limitations."},
+ {"question_id":"q002","relevant_chunk_ids":["paper1_c0000","paper1_c0002","paper1_c0005"],"judgment_basis":"Direct explanation of indiscriminate retrieval harms."},
+ {"question_id":"q003","relevant_chunk_ids":["paper1_c0004","paper1_c0005","paper1_c0014","paper1_c0017"],"judgment_basis":"Direct comparison of on-demand and fixed retrieval."},
+ {"question_id":"q004","relevant_chunk_ids":["paper1_c0003","paper1_c0004","paper1_c0017"],"judgment_basis":"Retrieval token and decision procedure."},
+ {"question_id":"q005","relevant_chunk_ids":["paper1_c0003","paper1_c0015","paper1_c0016"],"judgment_basis":"Definition and table of reflection token types."},
+ {"question_id":"q006","relevant_chunk_ids":["paper1_c0016","paper1_c0017","paper1_c0018"],"judgment_basis":"Token roles in inference overview."},
+ {"question_id":"q007","relevant_chunk_ids":["paper1_c0017","paper1_c0018","paper1_c0029"],"judgment_basis":"Inference steps and segment scoring."},
+ {"question_id":"q008","relevant_chunk_ids":["paper1_c0017","paper1_c0018","paper1_c0029"],"judgment_basis":"Passage relevance, support, and utility assessment."},
+ {"question_id":"q009","relevant_chunk_ids":["paper1_c0027","paper1_c0028","paper1_c0029","paper1_c0030"],"judgment_basis":"Configurable inference thresholds and weights."},
+ {"question_id":"q010","relevant_chunk_ids":["paper1_c0021","paper1_c0022","paper1_c0023","paper1_c0024","paper1_c0025"],"judgment_basis":"Critic data collection and generator augmentation."},
+ {"question_id":"q011","relevant_chunk_ids":["paper1_c0021","paper1_c0023","paper1_c0025","paper1_c0026"],"judgment_basis":"Offline critic training contrasted with PPO cost."},
+ {"question_id":"q012","relevant_chunk_ids":["paper1_c0031","paper1_c0032","paper1_c0033","paper1_c0039"],"judgment_basis":"Task categories, datasets, and metric legend."},
+ {"question_id":"q013","relevant_chunk_ids":["paper1_c0038","paper1_c0039","paper1_c0041"],"judgment_basis":"ASQA result tables and citation metric legend."},
+ {"question_id":"q014","relevant_chunk_ids":["paper1_c0043","paper1_c0046","paper1_c0047"],"judgment_basis":"Ablation findings for retrieval relevance and ISSUP."},
+ {"question_id":"q015","relevant_chunk_ids":["paper1_c0024","paper1_c0025","paper1_c0026"],"judgment_basis":"Generator supervised training and PPO comparison."}
+]
