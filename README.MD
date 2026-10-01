@@ -1,6 +1,6 @@
 # RAG Research Assistant
 
-A small, inspectable RAG system over the SELF-RAG paper. It preserves the existing PDF ingestion and structure-aware chunking pipeline, then evaluates local dense-style, BM25, and hybrid retrieval against manually reviewed chunk-level evidence labels.
+A small, inspectable RAG system over the SELF-RAG paper. It preserves the existing PDF ingestion and structure-aware chunking pipeline, then evaluates local TF-IDF/cosine, BM25, and hybrid retrieval against manually reviewed chunk-level evidence labels.
 
 ## Architecture
 `PDF → ingestion → chunks + page/section metadata → local retrieval → optional reranking (not configured) → bounded context → configurable generation → retrieved-chunk citations`.
@@ -9,11 +9,11 @@ Retrieved text is untrusted evidence, never executable instructions. Inputs and 
 
 ## Components
 - `src/ingestion.py`, `src/chunking.py`: existing page-aware extraction and structure-aware chunks.
-- `src/retrieval.py`: deterministic TF-IDF/cosine "dense" baseline, BM25, and normalized hybrid retrieval (default dense weight 0.5).
+- `src/retrieval.py`: deterministic TF-IDF/cosine lexical baseline, BM25, and normalized hybrid retrieval (default dense weight 0.5).
 - `src/rag.py`: grounded orchestration, limits, citation validation, request IDs, and stage-safe errors. LLMs are injected/configured externally—no key is hard-coded.
 - `src/evaluation.py`: judgment validation and Recall@1/3/5/10 plus MRR.
 
-The dense baseline is intentionally dependency-free because sentence-transformers is not installed; it is not a claim that TF-IDF is a neural embedding model. No reranker or real LLM evaluation was executed in this environment.
+The TF-IDF baseline is intentionally dependency-free because sentence-transformers is not installed; it is not a claim that TF-IDF is a neural embedding model. No reranker or real LLM evaluation was executed in this environment.
 
 ## Reproducible evaluation
 ```bash
@@ -31,3 +31,10 @@ Empty/oversized queries, malformed manifests, invalid relevance labels, invalid 
 
 ## Decision record
 The concise rationale for chunking, baselines, hybrid scoring, deferred reranking, metrics, citations, and observability is in [docs/adr/ADR-001-through-008.md](docs/adr/ADR-001-through-008.md).
+
+## Status
+**Implemented and verified:** lexical TF-IDF, BM25, historical lexical hybrid evaluation, citation checks, bounded context, and retrieval benchmark.
+
+**Implemented but not executed:** `SemanticRetriever`, `CrossEncoderReranker`, and provider retry interface. They require `sentence-transformers` and model downloads, unavailable in this runtime.
+
+**Future work:** configure a real LLM provider via environment-managed credentials, then measure generation latency, tokens, cost, and model-based groundedness.
