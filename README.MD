@@ -1,128 +1,33 @@
 # RAG Research Assistant
 
-An incremental research-paper assistant intended to produce grounded answers
-with citations. The project is being built and evaluated in small, testable
-milestones rather than as a single end-to-end implementation.
+A small, inspectable RAG system over the SELF-RAG paper. It preserves the existing PDF ingestion and structure-aware chunking pipeline, then evaluates local dense-style, BM25, and hybrid retrieval against manually reviewed chunk-level evidence labels.
 
-## Problem
+## Architecture
+`PDF → ingestion → chunks + page/section metadata → local retrieval → optional reranking (not configured) → bounded context → configurable generation → retrieved-chunk citations`.
 
-Language models can produce plausible answers that are unsupported by source
-documents. This project will evaluate whether retrieval, reranking, citation
-construction, and explicit evaluation improve grounding for questions over
-research papers.
+Retrieved text is untrusted evidence, never executable instructions. Inputs and contexts are bounded; citations are validated against retrieved chunk IDs; structured logs intentionally omit secrets.
 
-## Planned architecture
+## Components
+- `src/ingestion.py`, `src/chunking.py`: existing page-aware extraction and structure-aware chunks.
+- `src/retrieval.py`: deterministic TF-IDF/cosine "dense" baseline, BM25, and normalized hybrid retrieval (default dense weight 0.5).
+- `src/rag.py`: grounded orchestration, limits, citation validation, request IDs, and stage-safe errors. LLMs are injected/configured externally—no key is hard-coded.
+- `src/evaluation.py`: judgment validation and Recall@1/3/5/10 plus MRR.
 
-```text
-PDF documents
-  -> layout-aware text extraction
-  -> sentence-aware, section-bounded chunks
-  -> embeddings and vector retrieval
-  -> BM25 and hybrid retrieval
-  -> reranking
-  -> context construction
-  -> grounded generation with citations
-  -> evaluation and tracing
-```
+The dense baseline is intentionally dependency-free because sentence-transformers is not installed; it is not a claim that TF-IDF is a neural embedding model. No reranker or real LLM evaluation was executed in this environment.
 
-## Current implementation
-
-Implemented:
-
-- PDF ingestion extracts page-level text and source/page metadata.
-- Chunking keeps sentences within their detected section and preserves source,
-  page range, section, document ID, and chunk ID metadata.
-- `evaluation/retrieval_dataset.json` contains manually authored retrieval
-  questions with expected section and page labels for one local paper.
-- `scripts/generate_chunk_manifest.py` projects the existing ingestion and
-  fixed-default chunking output into a deterministic chunk manifest.
-
-Not implemented yet: embeddings, vector retrieval, BM25, hybrid retrieval,
-reranking, generation, citations, and runtime observability.
-
-## Evaluation foundation
-
-### Decision
-
-Keep a version-controlled, question-level retrieval dataset and validate its
-schema in the test suite. Generate a tracked chunk manifest from the ignored
-local PDF before adding exact chunk-level relevance judgments.
-
-### Reason
-
-The retrieval stages have not been implemented. Preserving the questions and
-their expected source regions now gives later retrieval experiments a stable
-evaluation input.
-
-### Alternatives considered
-
-- Evaluate retrieval only with ad-hoc manual questions.
-- Label exact chunk IDs before the final chunking configuration is selected.
-
-### Evidence
-
-The dataset currently provides expected sections and pages, while chunk IDs are
-derived from chunking configuration. No retrieval-quality, latency, or cost
-measurements exist yet.
-
-### Tradeoffs
-
-The current labels can support source-region checks but cannot yet calculate
-exact chunk-level Recall@K or MRR. Exact relevance judgments should be added
-after the chunking configuration is finalized and before retrieval strategies
-are compared.
-
-### Chunk-manifest workflow
-
-Chunk-level judgments need stable chunk IDs and the exact extracted text they
-refer to; section/page labels alone cannot verify that a chunk contains enough
-evidence for an answer. The manifest generator deliberately reuses
-`extract_text_from_pdf` and `chunk_documents` with their current defaults, so
-it does not define a second chunking configuration.
-
-With the local, ignored corpus available at `data/raw/paper1.pdf`, generate
-the tracked artifact with:
-
+## Reproducible evaluation
 ```bash
-python scripts/generate_chunk_manifest.py
+python3 scripts/evaluate_retrieval.py
+python3 scripts/benchmark_retrieval.py
+pytest -q
 ```
+Machine-readable outputs are `evaluation/retrieval_results.json` and `evaluation/benchmark_results.json`. Scores and latency files are generated from the local 15-question dataset and 127 tracked chunks; re-run commands after retrieval changes.
 
-This writes `evaluation/chunk_manifest.json`, containing each chunk's document
-ID, chunk ID/index, page range, section, and exact chunk text. JSON is emitted
-in the chunking pipeline's order with stable indentation, making the artifact
-suitable for review and later relevance judgments. The manifest-schema test
-uses a temporary fixture PDF; it does **not** validate the absent real corpus.
+## Measured results
+See the JSON artifacts above for actual numbers. The benchmark separates cold index construction from 150 warm retrieval searches and reports p50/p95/p99. It does not measure end-to-end LLM latency because no provider was configured.
 
-Do not add relevance judgments until the real-PDF manifest has been generated
-and each proposed mapping has been checked against its `chunk_text`.
+## Failure handling and limitations
+Empty/oversized queries, malformed manifests, invalid relevance labels, invalid citations, and empty context fail clearly. LLM timeouts/API failures and malformed provider output require a concrete provider adapter and are not silently masked. The system has no authentication, deployment service, neural embedding model, reranker, or production load test.
 
-## Local development
-
-Create an environment and install dependencies:
-
-```bash
-python -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-```
-
-Run the tests:
-
-```bash
-python -m pytest -q
-```
-
-The ingestion test creates a temporary PDF at test time. Local PDFs under
-`data/raw/` are intentionally ignored by Git and are not required to run the
-test suite.
-
-## Known limitations
-
-- The evaluation dataset targets one paper and has question-level source-region
-  labels only until the real local corpus is used to generate and review
-  `evaluation/chunk_manifest.json`.
-- This checkout does not contain `data/raw/paper1.pdf`; no real-corpus manifest
-  or chunk-level judgments have been generated here.
-- Extraction and chunking have unit coverage, but the local corpus is not
-  version-controlled, so corpus-level ingestion has not been reproduced here.
-- No retrieval or generation quality, latency, token, or cost metrics have
-  been measured.
+## Decision record
+The concise rationale for chunking, baselines, hybrid scoring, deferred reranking, metrics, citations, and observability is in [docs/adr/ADR-001-through-008.md](docs/adr/ADR-001-through-008.md).
