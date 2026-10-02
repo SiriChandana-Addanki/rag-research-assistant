@@ -30,6 +30,32 @@ def metrics_with_trace(retriever,dataset,judgments,semantic=False):
   score_index={chunk['chunk_id']:index for index,chunk in enumerate(retriever.chunks)}
   traces.append({'question_id':q['id'],'question':q['question'],'expected_relevant_chunk_ids':expected[q['id']],'ranked_chunks':[{'rank':rank,'chunk_id':result.chunk['chunk_id'],'semantic_score':semantic_scores[score_index[result.chunk['chunk_id']]] if semantic_scores is not None else None,'bm25_score':bm25_scores[score_index[result.chunk['chunk_id']]] if bm25_scores is not None else None,'combined_score':combined_scores[score_index[result.chunk['chunk_id']]] if combined_scores is not None else None,'page_start':result.chunk['page_start'],'page_end':result.chunk['page_end'],'section':result.chunk['section'],'is_relevant':result.chunk['chunk_id'] in relevant} for rank,result in enumerate(results,1)]})
  n=len(dataset); return {**{f'recall@{k}':hits[k]/n for k in KS},'mrr':rr/n},traces
+
+def metrics_from_trace(traces, dataset, judgments):
+ """Recompute the retrieval metrics from a persisted ranked trace.
+
+ The trace is an evaluation artifact, not a second source of relevance labels:
+ expected IDs and relevance flags must agree with the supplied judgments.
+ """
+ gold={item['question_id']:set(item['relevant_chunk_ids']) for item in judgments}
+ questions={item['id'] for item in dataset}
+ if [item['question_id'] for item in traces] != [item['id'] for item in dataset]:
+  raise ValueError('trace must contain each dataset question in dataset order')
+ hits={k:0 for k in KS}; reciprocal_rank=0
+ for trace in traces:
+  question_id=trace['question_id']
+  if question_id not in questions or set(trace['expected_relevant_chunk_ids']) != gold[question_id]:
+   raise ValueError('trace relevance labels do not match judgments')
+  ranked=trace['ranked_chunks']
+  if [item['rank'] for item in ranked] != list(range(1,len(ranked)+1)):
+   raise ValueError('trace ranks must be consecutive and one-indexed')
+  if any(item['is_relevant'] != (item['chunk_id'] in gold[question_id]) for item in ranked):
+   raise ValueError('trace relevance flags do not match judgments')
+  ids=[item['chunk_id'] for item in ranked]
+  for k in KS: hits[k]+=bool(set(ids[:k])&gold[question_id])
+  reciprocal_rank+=next((1/(index+1) for index,chunk_id in enumerate(ids) if chunk_id in gold[question_id]),0)
+ n=len(dataset)
+ return {**{f'recall@{k}':hits[k]/n for k in KS},'mrr':reciprocal_rank/n}
 def load_evaluation_inputs(manifest='evaluation/chunk_manifest.json',dataset='evaluation/retrieval_dataset.json',judgments='evaluation/relevance_judgments.json'):
  c=load_manifest(manifest); d=json.loads(Path(dataset).read_text()); j=json.loads(Path(judgments).read_text()); validate_judgments(j,d,c)
  return c,d,j
