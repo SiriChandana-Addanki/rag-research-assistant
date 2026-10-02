@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-from src.evaluation import metrics
+from src.evaluation import metrics, metrics_from_trace
 from src.retrieval import HybridRetriever
 
 
@@ -58,7 +58,7 @@ def test_semantic_evaluator_persists_ranked_retrieval_traces(tmp_path, monkeypat
             judgments,
         )
     assert set(trace["configurations"]) == {"semantic", "semantic_0.25_bm25_0.75", "semantic_0.50_bm25_0.50", "semantic_0.75_bm25_0.25"}
-    for questions in trace["configurations"].values():
+    for name, questions in trace["configurations"].items():
         assert [item["question_id"] for item in questions] == ["q1", "q2"]
         assert questions[0]["question"] == "alpha question"
         assert questions[0]["expected_relevant_chunk_ids"] == ["chunk-a"]
@@ -67,6 +67,7 @@ def test_semantic_evaluator_persists_ranked_retrieval_traces(tmp_path, monkeypat
         assert ranked[0]["chunk_id"] == "chunk-a"
         assert ranked[0]["page_start"] == 1 and ranked[0]["page_end"] == 1
         assert ranked[0]["section"] == "Alpha" and ranked[0]["is_relevant"] is True
+        assert metrics_from_trace(questions, dataset, judgments) == result[name]
     semantic_chunk = trace["configurations"]["semantic"][0]["ranked_chunks"][0]
     assert semantic_chunk["semantic_score"] == .9
     assert semantic_chunk["bm25_score"] is None and semantic_chunk["combined_score"] is None
@@ -74,3 +75,36 @@ def test_semantic_evaluator_persists_ranked_retrieval_traces(tmp_path, monkeypat
     assert hybrid_chunk["semantic_score"] == .9
     assert hybrid_chunk["bm25_score"] > 0
     assert hybrid_chunk["combined_score"] == 1
+
+
+def test_metrics_from_trace_rejects_relevance_drift():
+    dataset = [{"id": "q1", "question": "question"}]
+    judgments = [{"question_id": "q1", "relevant_chunk_ids": ["chunk-a"]}]
+    trace = [{
+        "question_id": "q1", "question": "question",
+        "expected_relevant_chunk_ids": ["chunk-a"],
+        "ranked_chunks": [{"rank": 1, "chunk_id": "chunk-a", "is_relevant": False}],
+    }]
+
+    import pytest
+
+    with pytest.raises(ValueError, match="relevance flags"):
+        metrics_from_trace(trace, dataset, judgments)
+
+
+def test_multi_query_retriever_keeps_the_original_query_and_fuses_deterministically():
+    from src.retrieval import MultiQueryRetriever
+
+    chunks = [
+        {"chunk_id": "chunk-a", "chunk_text": "a"},
+        {"chunk_id": "chunk-b", "chunk_text": "b"},
+    ]
+    primary = FakeSemanticRetriever(chunks)
+    chunks[0]["semantic_scores"] = {"original": .2, "aspect": .9}
+    chunks[1]["semantic_scores"] = {"original": .8, "aspect": .1}
+    retriever = MultiQueryRetriever(primary, lambda query: ["aspect", "aspect", ""])
+
+    assert retriever.queries("original") == ["original", "aspect"]
+    assert [result.chunk["chunk_id"] for result in retriever.search("original", 2)] == [
+        "chunk-a", "chunk-b"
+    ]
