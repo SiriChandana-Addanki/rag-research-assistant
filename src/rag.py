@@ -57,7 +57,9 @@ class RAGPipeline:
    base["latency"].update({"generation_ms":generation_ms,"total_ms":(time.perf_counter()-started)*1000}); base.update({"answer":answer,"citations":[asdict(c) for c in citations],"citation_validation":True,"token_usage":response.token_usage or "unavailable","cost":estimate_cost(response.token_usage),"provider_model":response.model,"evaluation_status":"generated"})
    self.log.info("rag_request",extra={"request_id":request_id,"retrieval_method":base["retrieval_method"],"selected_chunk_ids":base["retrieved_chunk_ids"],"total_latency_ms":round(base["latency"]["total_ms"],3)})
    return base
-  except Exception:
+  except Exception as error:
+   # The evaluation runner needs correlation data even when generation fails.
+   error.request_id=request_id; error.latency_ms=(time.perf_counter()-started)*1000
    self.log.warning("rag_failure",extra={"request_id":request_id,"failure_stage":"pipeline"}); raise
  def _generate(self,prompt):
   for attempt in range(self.retries+1):

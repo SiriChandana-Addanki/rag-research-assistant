@@ -45,6 +45,8 @@ The same run measured lexical hybrid index construction at 115.786 ms. Across 15
 
 The generation layer uses the official `google-genai` SDK behind a provider protocol. `scripts/ask.py` runs one question and `scripts/evaluate_answers.py` writes per-question answer records without reference answers or fabricated quality scores. Provider output must be JSON with an answer and citations, and citations are rejected unless they identify a retrieved chunk and a matching document/page. Token usage is recorded when Gemini supplies it; cost is reported only when both local `RAG_INPUT_COST_PER_MILLION` and `RAG_OUTPUT_COST_PER_MILLION` are configured.
 
+Gemini returned an observed HTTP 503 `UNAVAILABLE` high-demand failure during a 15-question run. The batch evaluator now records that question as a non-secret `transient_failure` (with status/type, model, application retry count, request ID when available, and failure latency) and continues with later questions. It writes an aggregate success/failure count, successful-only latency statistics, and only the token totals actually returned by successful responses. `evaluate_answers.py` sets its application retry count to zero: the Google SDK may perform its own transient retries, so this avoids multiplying SDK retries for every batch question. `ask.py` retains its configured pipeline retry behavior.
+
 Copy `.env.example` to a local ignored `.env` only through your own environment loader, or set `GEMINI_API_KEY`, `GEMINI_MODEL`, `RAG_TOP_K`, `RAG_CANDIDATE_K`, `RAG_SEMANTIC_WEIGHT`, `RAG_CONTEXT_LIMIT`, `RAG_TIMEOUT`, and `RAG_MAX_RETRIES` in the shell. No key is read from source files or logged.
 
 ## Engineering trade-offs
