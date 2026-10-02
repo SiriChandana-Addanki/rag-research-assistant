@@ -9,7 +9,7 @@
  {"question_id":"q008","relevant_chunk_ids":["paper1_c0017","paper1_c0018","paper1_c0029"],"judgment_basis":"Passage relevance, support, and utility assessment."},
  {"question_id":"q009","relevant_chunk_ids":["paper1_c0027","paper1_c0028","paper1_c0029","paper1_c0030"],"judgment_basis":"Configurable inference thresholds and weights."},
  {"question_id":"q010","relevant_chunk_ids":["paper1_c0021","paper1_c0022","paper1_c0023","paper1_c0024","paper1_c0025"],"judgment_basis":"Critic data collection and generator augmentation."},
- {"question_id":"q011","relevant_chunk_ids":["paper1_c0021","paper1_c0023","paper1_c0025","paper1_c0026"],"judgment_basis":"Offline critic training contrasted with PPO cost."},
+ {"question_id":"q011","relevant_chunk_ids":["paper1_c0012","paper1_c0021","paper1_c0023","paper1_c0025","paper1_c0026"],"judgment_basis":"Offline critic-token augmentation and generator training contrasted with PPO/RLHF cost and inference control; paper1_c0012 was added after text review."},
  {"question_id":"q012","relevant_chunk_ids":["paper1_c0031","paper1_c0032","paper1_c0033","paper1_c0039"],"judgment_basis":"Task categories, datasets, and metric legend."},
  {"question_id":"q013","relevant_chunk_ids":["paper1_c0038","paper1_c0039","paper1_c0041"],"judgment_basis":"ASQA result tables and citation metric legend."},
  {"question_id":"q014","relevant_chunk_ids":["paper1_c0043","paper1_c0046","paper1_c0047"],"judgment_basis":"Ablation findings for retrieval relevance and ISSUP."},
