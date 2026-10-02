@@ -1,0 +1,456 @@
+{
+  "artifact_type": "q009_candidate_reachability_diagnostic",
+  "question_id": "q009",
+  "question": "How can SELF-RAG change the balance between factual grounding and generation quality at inference time without retraining the model?",
+  "expected_chunk_ids": [
+    "paper1_c0027",
+    "paper1_c0028",
+    "paper1_c0029",
+    "paper1_c0030"
+  ],
+  "methodology": {
+    "ranking_definition": "hybrid rank: 0.75 min-max-normalized semantic score + 0.25 min-max-normalized BM25 score; descending score then chunk ID tie-break.",
+    "label_use": "Ranks and scores were not changed using relevance labels. Judgments were consulted only to name the four expected chunks.",
+    "data_limit": "The supplied MultiQuery trace persists ten ranked chunks per variant, not all 127. semantic_embeddings.json contains document vectors but no query vectors; sentence-transformers/model weights are unavailable in this environment. Therefore unpersisted semantic scores, hybrid scores, exact ranks 11\u2013127, and B/C/D classifications cannot be truthfully reconstructed."
+  },
+  "candidate_reachability": [
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0027",
+      "query_variant_id": "original",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 9.06444014831146,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "A",
+      "best_variant_for_chunk": "inference_control"
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0028",
+      "query_variant_id": "original",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 3.9443812532602998,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0029",
+      "query_variant_id": "original",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 9.576856882982641,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0030",
+      "query_variant_id": "original",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 12.41623440849614,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0027",
+      "query_variant_id": "inference_control",
+      "rank": 5,
+      "rank_status": "exact from persisted top-10 trace",
+      "semantic_score": 0.4240117877811279,
+      "bm25_score": 15.284454286327364,
+      "hybrid_score": 0.7632940016032925,
+      "top10": true,
+      "top20": true,
+      "top30": true,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "A",
+      "best_variant_for_chunk": "inference_control"
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0028",
+      "query_variant_id": "inference_control",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 2.5379649052087134,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0029",
+      "query_variant_id": "inference_control",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 8.135211997717665,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0030",
+      "query_variant_id": "inference_control",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 2.238527558878202,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0027",
+      "query_variant_id": "grounding_quality_tradeoff",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 8.448028711824632,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "A",
+      "best_variant_for_chunk": "inference_control"
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0028",
+      "query_variant_id": "grounding_quality_tradeoff",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 1.7592749332202415,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0029",
+      "query_variant_id": "grounding_quality_tradeoff",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 4.952119571308181,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0030",
+      "query_variant_id": "grounding_quality_tradeoff",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 11.600912887834271,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0027",
+      "query_variant_id": "no_retraining_control",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 5.995860455499992,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "A",
+      "best_variant_for_chunk": "inference_control"
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0028",
+      "query_variant_id": "no_retraining_control",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 3.6761853877342068,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0029",
+      "query_variant_id": "no_retraining_control",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 8.057161538244788,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    },
+    {
+      "question_id": "q009",
+      "expected_chunk_id": "paper1_c0030",
+      "query_variant_id": "no_retraining_control",
+      "rank": null,
+      "rank_status": "not persisted; known only not top-10",
+      "semantic_score": null,
+      "bm25_score": 1.69948426673215,
+      "hybrid_score": null,
+      "top10": false,
+      "top20": null,
+      "top30": null,
+      "full_127_candidate_status": "not reconstructible from supplied artifacts: query embeddings and full candidate traces are absent",
+      "classification": "indeterminate (B/C/D cannot be assigned from supplied top-10-only traces)",
+      "best_variant_for_chunk": null
+    }
+  ],
+  "best_variants": {
+    "paper1_c0027": {
+      "variant": "inference_control",
+      "rank": 5,
+      "classification": "A"
+    },
+    "paper1_c0028": {
+      "variant": null,
+      "rank": null,
+      "classification": "indeterminate"
+    },
+    "paper1_c0029": {
+      "variant": null,
+      "rank": null,
+      "classification": "indeterminate"
+    },
+    "paper1_c0030": {
+      "variant": null,
+      "rank": null,
+      "classification": "indeterminate"
+    }
+  },
+  "final_fusion_comparison": {
+    "A_control_max_depth_10": {
+      "paper1_c0027": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0028": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0029": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0030": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      }
+    },
+    "B_max_depth_20": {
+      "paper1_c0027": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0028": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0029": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0030": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      }
+    },
+    "B_max_depth_30": {
+      "paper1_c0027": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0028": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0029": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0030": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      }
+    },
+    "C_rrf_k60_depth_10": {
+      "paper1_c0027": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0028": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0029": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0030": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      }
+    },
+    "D_round_robin_union_depth_10": {
+      "paper1_c0027": {
+        "final_rank": 10,
+        "in_final_top10": true,
+        "candidate_sources": [
+          {
+            "chunk_id": "paper1_c0027",
+            "source_variant_id": "inference_control",
+            "source_query": "How does SELF-RAG control its behavior at inference time?",
+            "source_rank": 5,
+            "semantic_score": 0.4240117877811279,
+            "bm25_score": 15.284454286327364,
+            "hybrid_score": 0.7632940016032925
+          }
+        ]
+      },
+      "paper1_c0028": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0029": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      },
+      "paper1_c0030": {
+        "final_rank": null,
+        "in_final_top10": false,
+        "candidate_sources": []
+      }
+    }
+  },
+  "chunk_content": {
+    "paper1_c0027": {
+      "document_id": "paper1",
+      "chunk_id": "paper1_c0027",
+      "chunk_index": 27,
+      "page_start": 6,
+      "page_end": 6,
+      "section": "3.3 SELF-RAG INFERENCE",
+      "chunk_text": "Generating reflection tokens to self-evaluate its own output makes SELF-RAG controllable during the inference phase, enabling it to tailor its behavior to diverse task requirements. For tasks demanding factual accuracy (Min et al., 2023), we aim for the model to retrieve passages more frequently to ensure that the output aligns closely with the available evidence. Conversely, in more open-ended tasks, like composing a personal experience essay, the emphasis shifts towards retrieving less and prioritizing the overall creativity or utility score. In this section, we describe approaches to enforce control to meet these distinct objectives during the inference process. Adaptive retrieval with threshold. SELF-RAG dynamically decides when to retrieve text passages by predicting Retrieve . Alternatively, our framework allows a threshold to be set."
+    },
+    "paper1_c0028": {
+      "document_id": "paper1",
+      "chunk_id": "paper1_c0028",
+      "chunk_index": 28,
+      "page_start": 6,
+      "page_end": 6,
+      "section": "3.3 SELF-RAG INFERENCE",
+      "chunk_text": "Alternatively, our framework allows a threshold to be set. Specifically, if the probability of generating the Retrieve =Yes token normalized over all output tokens in Retrieve surpasses a designated threshold, we trigger retrieval (details in Appendix Section A.3). Tree-decoding with critique tokens. At each segment step t, when retrieval is required, based either on hard or soft conditions, R retrieves K passages, and the generator M processes each passage in parallel and outputs K different continuation candidates. We conduct a segment-level beam search (with the beam size=B) to obtain the top-B segment continuations at each timestamp t, and return the best sequence at the end of generation. The score of each segment yt with respect to passage d is updated with a critic score S that is the linear weighted sum of the normalized probability of each Critique token type."
+    },
+    "paper1_c0029": {
+      "document_id": "paper1",
+      "chunk_id": "paper1_c0029",
+      "chunk_index": 29,
+      "page_start": 6,
+      "page_end": 6,
+      "section": "3.3 SELF-RAG INFERENCE",
+      "chunk_text": "The score of each segment yt with respect to passage d is updated with a critic score S that is the linear weighted sum of the normalized probability of each Critique token type. For each critique token group G (e.g., ISREL ), we denote its score at timestamp t as sG t , and we compute a segment score as follows: f(yt, d, Critique ) = p(yt|x, d, y<t)) + S( Critique ), where (3) X wGsG t for G = { ISREL , ISSUP , ISUSE }, (4) S( Critique ) = G\u2208G t = pt(\u02c6r) PNG where sG i=1 pt(ri) stands for the generation probability of the most desirable reflection token \u02c6r (e.g., ISREL =Relevant) for the critique token type G with N G distinct tokens (that represent different possible values for G). The weights wG in Eq. 4 are hyperparameters that can be adjusted at inference time to enable customized behaviors at test time. For instance, to ensure that result y is mostly supported by evidence, we can set a weight term for the ISSUP score higher, while relatively lowering weights for other aspects."
+    },
+    "paper1_c0030": {
+      "document_id": "paper1",
+      "chunk_id": "paper1_c0030",
+      "chunk_index": 30,
+      "page_start": 6,
+      "page_end": 6,
+      "section": "3.3 SELF-RAG INFERENCE",
+      "chunk_text": "For instance, to ensure that result y is mostly supported by evidence, we can set a weight term for the ISSUP score higher, while relatively lowering weights for other aspects. Alternatively, we could further enforce hard constraints during decoding using Critique . Instead of using a soft reward function in Eq. 4, we could explicitly filter out a segment continuation when the model generates an undesirable Critique token (e.g., ISSUP =No support) . Balancing the trade-off between multiple preferences has been studied in RLHF (Touvron et al., 2023; Wu et al., 2023), which often requires training to change models\u2019 behaviors. SELF-RAG tailors an LM with no additional training. EXPERIMENTS"
+    }
+  }
+}
