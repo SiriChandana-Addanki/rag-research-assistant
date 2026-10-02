@@ -45,3 +45,9 @@ def test_experiment_runner_persists_trace_and_results(tmp_path, monkeypatch):
     trace=json.loads(traces.read_text())
     assert trace['multi_query'][0]['query_variants'][1]['id'] == 'aspect'
     assert trace['multi_query'][0]['ranked_chunks'][0]['fused_score'] is not None
+
+
+def test_evidence_coverage_accepts_list_or_set_expected_ids():
+    from src.multi_query_evaluation import evidence_coverage
+    ranked = [{'rank': 1, 'chunk_id': 'b'}, {'rank': 2, 'chunk_id': 'a'}]
+    assert evidence_coverage(ranked, ['a', 'b', 'a']) == evidence_coverage(ranked, {'a', 'b'})

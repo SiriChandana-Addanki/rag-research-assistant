@@ -1,7 +1,1849 @@
 {
-  "status": "not_run",
-  "reason": "No trace exists because the controlled semantic experiment could not be executed without sentence_transformers. Run scripts/evaluate_multi_query_retrieval.py in an environment with the baseline model available.",
+  "status": "multi_query_not_run",
+  "reason": "sentence_transformers is unavailable; no multi-query scores or rankings were produced.",
+  "baseline_source": "evaluation/semantic_retrieval_traces.json:semantic_0.75_bm25_0.25",
   "candidate_count": 127,
   "final_top_k": 10,
-  "fusion_method": "max_combined_score"
+  "fusion_method": "max_combined_score",
+  "baseline_trace": [
+    {
+      "question_id": "q001",
+      "question": "What problem with conventional Retrieval-Augmented Generation does SELF-RAG aim to address?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0000",
+        "paper1_c0002",
+        "paper1_c0005"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.763504604366496,
+          "bm25_score": 13.38084746007311,
+          "combined_score": 1.0,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0003",
+          "semantic_score": 0.5791565126524181,
+          "bm25_score": 10.181275830778528,
+          "combined_score": 0.7741805855748977,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0051",
+          "semantic_score": 0.5076743085089945,
+          "bm25_score": 12.89446206107132,
+          "combined_score": 0.7604888824964308,
+          "page_start": 10,
+          "page_end": 11,
+          "section": "CONCLUSION",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.5865802883774914,
+          "bm25_score": 8.776824370005185,
+          "combined_score": 0.7546271484681211,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0005",
+          "semantic_score": 0.481428825939265,
+          "bm25_score": 12.896671922750393,
+          "combined_score": 0.7368911280752162,
+          "page_start": 1,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.5918668694478015,
+          "bm25_score": 7.467582139812075,
+          "combined_score": 0.7349275957220908,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0000",
+          "semantic_score": 0.517186492546956,
+          "bm25_score": 10.466335022162724,
+          "combined_score": 0.7236906924521227,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "ABSTRACT",
+          "is_relevant": true
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0008",
+          "semantic_score": 0.4995623042990353,
+          "bm25_score": 9.760603846616291,
+          "combined_score": 0.6946312910197676,
+          "page_start": 2,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0007",
+          "semantic_score": 0.5113576190719856,
+          "bm25_score": 8.569982267011879,
+          "combined_score": 0.683010328757718,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0012",
+          "semantic_score": 0.4658101679759061,
+          "bm25_score": 10.438975363237274,
+          "combined_score": 0.6769053815965262,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q002",
+      "question": "Why can automatically adding a fixed number of retrieved passages actually make an LLM's responses worse?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0000",
+        "paper1_c0002",
+        "paper1_c0005"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0000",
+          "semantic_score": 0.4964178777618782,
+          "bm25_score": 21.05345281997802,
+          "combined_score": 0.8820968101916186,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "ABSTRACT",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0003",
+          "semantic_score": 0.5522973677801466,
+          "bm25_score": 10.637350057110654,
+          "combined_score": 0.8275897606304028,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0002",
+          "semantic_score": 0.5916539635475503,
+          "bm25_score": 5.130776087006044,
+          "combined_score": 0.8109255893899902,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.48813030923114026,
+          "bm25_score": 12.611991170791915,
+          "combined_score": 0.771598273785733,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0014",
+          "semantic_score": 0.5084782994211816,
+          "bm25_score": 7.891008395762902,
+          "combined_score": 0.7407297976359277,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0088",
+          "semantic_score": 0.5177555758687461,
+          "bm25_score": 4.641588723638489,
+          "combined_score": 0.713629801637937,
+          "page_start": 20,
+          "page_end": 20,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0008",
+          "semantic_score": 0.4431440636950046,
+          "bm25_score": 11.648468474208517,
+          "combined_score": 0.7044634836059056,
+          "page_start": 2,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0001",
+          "semantic_score": 0.5092822623324672,
+          "bm25_score": 4.413395534688431,
+          "combined_score": 0.7004300696003696,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "ABSTRACT",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0051",
+          "semantic_score": 0.4928534674409359,
+          "bm25_score": 5.679742190324147,
+          "combined_score": 0.6951283435243747,
+          "page_start": 10,
+          "page_end": 11,
+          "section": "CONCLUSION",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0052",
+          "semantic_score": 0.49438639983191884,
+          "bm25_score": 5.503126247961378,
+          "combined_score": 0.6949288960573977,
+          "page_start": 11,
+          "page_end": 11,
+          "section": "CONCLUSION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q003",
+      "question": "How does SELF-RAG's retrieval strategy differ from the retrieval strategy used by conventional RAG?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0004",
+        "paper1_c0005",
+        "paper1_c0014",
+        "paper1_c0017"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.7008416199464426,
+          "bm25_score": 11.479780984281229,
+          "combined_score": 0.9466902647756058,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.5831006260905895,
+          "bm25_score": 9.657209587294165,
+          "combined_score": 0.8023351155664578,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.5855559757284169,
+          "bm25_score": 7.628287347433847,
+          "combined_score": 0.7699314712243835,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0046",
+          "semantic_score": 0.4440260285849996,
+          "bm25_score": 13.200799324465912,
+          "combined_score": 0.7294240083398822,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0045",
+          "semantic_score": 0.5425685067846364,
+          "bm25_score": 7.211241734978241,
+          "combined_score": 0.7214827509188991,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.5523049882306383,
+          "bm25_score": 6.548203723421943,
+          "combined_score": 0.7194775115988774,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0048",
+          "semantic_score": 0.4536008637518007,
+          "bm25_score": 11.920951311590702,
+          "combined_score": 0.7166952646695854,
+          "page_start": 10,
+          "page_end": 10,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0074",
+          "semantic_score": 0.48313713665836444,
+          "bm25_score": 7.320113136155864,
+          "combined_score": 0.666245267556719,
+          "page_start": 17,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0005",
+          "semantic_score": 0.3474807562144073,
+          "bm25_score": 14.591191126538394,
+          "combined_score": 0.6604838380950987,
+          "page_start": 1,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": true
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0088",
+          "semantic_score": 0.4389535875314286,
+          "bm25_score": 7.935741480266975,
+          "combined_score": 0.6343407780949077,
+          "page_start": 20,
+          "page_end": 20,
+          "section": "REFERENCES",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q004",
+      "question": "What mechanism allows SELF-RAG to determine during generation whether external information is actually needed?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0003",
+        "paper1_c0004",
+        "paper1_c0017"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.6528876190609406,
+          "bm25_score": 5.556118136950406,
+          "combined_score": 0.872727531200205,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.6349630205335138,
+          "bm25_score": 4.826482400722634,
+          "combined_score": 0.8365745499724478,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.513001968644458,
+          "bm25_score": 9.924586607228724,
+          "combined_score": 0.8128560804449725,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0074",
+          "semantic_score": 0.5141276296984351,
+          "bm25_score": 9.802834771862607,
+          "combined_score": 0.8114250115079586,
+          "page_start": 17,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0010",
+          "semantic_score": 0.47245024904342015,
+          "bm25_score": 10.35172980996474,
+          "combined_score": 0.7769620832024444,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0050",
+          "semantic_score": 0.5189047699512797,
+          "bm25_score": 7.01442527391773,
+          "combined_score": 0.7551725445693057,
+          "page_start": 10,
+          "page_end": 10,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0088",
+          "semantic_score": 0.5326624580329121,
+          "bm25_score": 5.937818931330998,
+          "combined_score": 0.7467701458902525,
+          "page_start": 20,
+          "page_end": 20,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.4847755552170833,
+          "bm25_score": 7.183487607955275,
+          "combined_score": 0.720756999978055,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0003",
+          "semantic_score": 0.48875109494458935,
+          "bm25_score": 6.6000490616035385,
+          "combined_score": 0.7123134807589895,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": true
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0026",
+          "semantic_score": 0.4244981901905085,
+          "bm25_score": 9.44194739594882,
+          "combined_score": 0.703264952290823,
+          "page_start": 6,
+          "page_end": 6,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q005",
+      "question": "What are reflection tokens in SELF-RAG, and what are the four types used by the framework?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0003",
+        "paper1_c0015",
+        "paper1_c0016"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0015",
+          "semantic_score": 0.4616153960130847,
+          "bm25_score": 16.888799892392598,
+          "combined_score": 0.9430358419607368,
+          "page_start": 3,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0018",
+          "semantic_score": 0.4824348801409623,
+          "bm25_score": 9.822333234163771,
+          "combined_score": 0.8676041925319282,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0050",
+          "semantic_score": 0.48971825409380954,
+          "bm25_score": 8.310870852596633,
+          "combined_score": 0.8554970162008735,
+          "page_start": 10,
+          "page_end": 10,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0073",
+          "semantic_score": 0.5016501511834149,
+          "bm25_score": 6.985566217402778,
+          "combined_score": 0.8527716239070647,
+          "page_start": 16,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0006",
+          "semantic_score": 0.4554641902699432,
+          "bm25_score": 11.278142447364077,
+          "combined_score": 0.8508715451111795,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0090",
+          "semantic_score": 0.4857139821733757,
+          "bm25_score": 8.230590068012688,
+          "combined_score": 0.8486059571069822,
+          "page_start": 21,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.4733849597098424,
+          "bm25_score": 9.32358730794544,
+          "combined_score": 0.8473126488562105,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.4955143332940123,
+          "bm25_score": 6.726144851239642,
+          "combined_score": 0.8401844282297749,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.4959287424185477,
+          "bm25_score": 4.910348501004671,
+          "combined_score": 0.8137791830980297,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0051",
+          "semantic_score": 0.4219176875293481,
+          "bm25_score": 11.613112858176292,
+          "combined_score": 0.8081192152242767,
+          "page_start": 10,
+          "page_end": 11,
+          "section": "CONCLUSION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q006",
+      "question": "How do the Retrieve, ISREL, ISSUP, and ISUSE reflection signals contribute to the SELF-RAG inference process?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0016",
+        "paper1_c0017",
+        "paper1_c0018"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.6353154095688313,
+          "bm25_score": 6.696605403167862,
+          "combined_score": 0.8603566458908889,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.6016419018571058,
+          "bm25_score": 8.859932262430483,
+          "combined_score": 0.8595705843209156,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0050",
+          "semantic_score": 0.5506582513506133,
+          "bm25_score": 11.483094042820792,
+          "combined_score": 0.8475269196276726,
+          "page_start": 10,
+          "page_end": 10,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.6182091091441528,
+          "bm25_score": 6.560030069223797,
+          "combined_score": 0.8393972396133126,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0016",
+          "semantic_score": 0.4704204050321997,
+          "bm25_score": 13.73089128675719,
+          "combined_score": 0.797280077272609,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0082",
+          "semantic_score": 0.48385343060947056,
+          "bm25_score": 12.436726372668208,
+          "combined_score": 0.790418810613485,
+          "page_start": 19,
+          "page_end": 19,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0010",
+          "semantic_score": 0.5334069716312801,
+          "bm25_score": 8.888472703001565,
+          "combined_score": 0.7855063810725847,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0046",
+          "semantic_score": 0.43611057700540495,
+          "bm25_score": 11.798670447626423,
+          "combined_score": 0.7276475379652808,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0024",
+          "semantic_score": 0.42310068526322164,
+          "bm25_score": 12.331558936191323,
+          "combined_score": 0.7223031215584822,
+          "page_start": 5,
+          "page_end": 5,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0007",
+          "semantic_score": 0.4677252329737839,
+          "bm25_score": 7.680609727684438,
+          "combined_score": 0.6936570657759858,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q007",
+      "question": "When SELF-RAG decides that retrieval is necessary, what sequence of steps does it perform before selecting the final generated segment?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0017",
+        "paper1_c0018",
+        "paper1_c0029"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.6840699937484119,
+          "bm25_score": 16.992131772982344,
+          "combined_score": 0.9265586345635872,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0074",
+          "semantic_score": 0.6132923053022328,
+          "bm25_score": 19.17036909304281,
+          "combined_score": 0.8869351905999745,
+          "page_start": 17,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.7309241664687687,
+          "bm25_score": 10.44441733622138,
+          "combined_score": 0.8862052197003839,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0046",
+          "semantic_score": 0.5015361054952866,
+          "bm25_score": 13.431323695282469,
+          "combined_score": 0.7046752637466558,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0010",
+          "semantic_score": 0.4693974853111466,
+          "bm25_score": 13.838016650651088,
+          "combined_score": 0.679088090271246,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.49013868957435813,
+          "bm25_score": 10.9624001585493,
+          "combined_score": 0.6615232210338033,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0018",
+          "semantic_score": 0.4762857541186725,
+          "bm25_score": 11.942746398013995,
+          "combined_score": 0.6609927804295193,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0015",
+          "semantic_score": 0.40909323558408545,
+          "bm25_score": 16.145548389710964,
+          "combined_score": 0.6512175774702449,
+          "page_start": 3,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.4989523873829537,
+          "bm25_score": 9.280605841405732,
+          "combined_score": 0.6480625164496903,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0007",
+          "semantic_score": 0.4872062927444088,
+          "bm25_score": 8.73966993585089,
+          "combined_score": 0.6297181403713804,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q008",
+      "question": "How does SELF-RAG's treatment of retrieved passages go beyond simply ranking them by retrieval relevance?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0017",
+        "paper1_c0018",
+        "paper1_c0029"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.7468053469433367,
+          "bm25_score": 14.707656336905657,
+          "combined_score": 0.9891466311336004,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.6692152086105252,
+          "bm25_score": 15.375144808844455,
+          "combined_score": 0.922757834886197,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0014",
+          "semantic_score": 0.6172567999279417,
+          "bm25_score": 14.17961942467679,
+          "combined_score": 0.8515931931904861,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0046",
+          "semantic_score": 0.5852596049099081,
+          "bm25_score": 15.320657662245617,
+          "combined_score": 0.8382927904758108,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0074",
+          "semantic_score": 0.6749898365088692,
+          "bm25_score": 9.376980685073512,
+          "combined_score": 0.830976359579824,
+          "page_start": 17,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0088",
+          "semantic_score": 0.5962010183458298,
+          "bm25_score": 11.26949858715441,
+          "combined_score": 0.7833132494142806,
+          "page_start": 20,
+          "page_end": 20,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.6126993685422946,
+          "bm25_score": 10.097496075967847,
+          "combined_score": 0.7806808365388509,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0010",
+          "semantic_score": 0.6005266142626493,
+          "bm25_score": 10.790592539654643,
+          "combined_score": 0.7798324292061113,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0003",
+          "semantic_score": 0.5753562366244895,
+          "bm25_score": 11.596666516118376,
+          "combined_score": 0.7678817051741744,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0005",
+          "semantic_score": 0.5206063478398795,
+          "bm25_score": 14.135921666356195,
+          "combined_score": 0.7546656693078408,
+          "page_start": 1,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q009",
+      "question": "How can SELF-RAG change the balance between factual grounding and generation quality at inference time without retraining the model?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0027",
+        "paper1_c0028",
+        "paper1_c0029",
+        "paper1_c0030"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0010",
+          "semantic_score": 0.5975142721646428,
+          "bm25_score": 13.948930847016854,
+          "combined_score": 0.9384831368771291,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0002",
+          "semantic_score": 0.6073139732826542,
+          "bm25_score": 13.031207443171187,
+          "combined_score": 0.9367964475003228,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0003",
+          "semantic_score": 0.5953505180281292,
+          "bm25_score": 12.988847891837667,
+          "combined_score": 0.9221105980603287,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.5955586120080782,
+          "bm25_score": 12.173051598724074,
+          "combined_score": 0.9106066567374272,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0013",
+          "semantic_score": 0.5555401995121255,
+          "bm25_score": 14.63639911518889,
+          "combined_score": 0.8989984860711564,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0074",
+          "semantic_score": 0.5045837936607924,
+          "bm25_score": 17.419853206344726,
+          "combined_score": 0.879131085128656,
+          "page_start": 17,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.5464774361838792,
+          "bm25_score": 13.854504959719135,
+          "combined_score": 0.8770750074477054,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0012",
+          "semantic_score": 0.5224425253397019,
+          "bm25_score": 14.520370897695786,
+          "combined_score": 0.8583858699020173,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0000",
+          "semantic_score": 0.5376790249409054,
+          "bm25_score": 11.458694317056253,
+          "combined_score": 0.8322195653704112,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "ABSTRACT",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0011",
+          "semantic_score": 0.5450766406510811,
+          "bm25_score": 9.424095623629459,
+          "combined_score": 0.8116218629096172,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q010",
+      "question": "How are reflection tokens produced and incorporated into the training data before the final SELF-RAG generator is trained?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0021",
+        "paper1_c0022",
+        "paper1_c0023",
+        "paper1_c0024",
+        "paper1_c0025"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0006",
+          "semantic_score": 0.5645193675768192,
+          "bm25_score": 14.914920067743031,
+          "combined_score": 0.936050628358097,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0018",
+          "semantic_score": 0.5932278220954121,
+          "bm25_score": 12.509740765489406,
+          "combined_score": 0.9329330289681336,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0003",
+          "semantic_score": 0.5495145286491785,
+          "bm25_score": 13.944733129107137,
+          "combined_score": 0.9049405253281403,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0049",
+          "semantic_score": 0.4807990792209872,
+          "bm25_score": 17.07233241069308,
+          "combined_score": 0.8737531191674304,
+          "page_start": 10,
+          "page_end": 10,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0005",
+          "semantic_score": 0.4910092820926914,
+          "bm25_score": 16.194638217132482,
+          "combined_score": 0.8723167113140566,
+          "page_start": 1,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0024",
+          "semantic_score": 0.5359947195421066,
+          "bm25_score": 12.199909933871739,
+          "combined_score": 0.8641113485951304,
+          "page_start": 5,
+          "page_end": 5,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0073",
+          "semantic_score": 0.516561939419425,
+          "bm25_score": 12.370896544747108,
+          "combined_score": 0.8448035542557435,
+          "page_start": 16,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0019",
+          "semantic_score": 0.4534977518793549,
+          "bm25_score": 16.101364955645067,
+          "combined_score": 0.8288237456461934,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.5767093216668071,
+          "bm25_score": 6.4486144611634835,
+          "combined_score": 0.8252899062339296,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0014",
+          "semantic_score": 0.5575729490265378,
+          "bm25_score": 6.698781659824297,
+          "combined_score": 0.8074788499464863,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q011",
+      "question": "How does SELF-RAG's offline critic-based training approach differ from PPO-based reinforcement learning approaches such as RLHF?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0012",
+        "paper1_c0021",
+        "paper1_c0023",
+        "paper1_c0025",
+        "paper1_c0026"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0011",
+          "semantic_score": 0.47914050234888145,
+          "bm25_score": 19.787564344523396,
+          "combined_score": 0.9764113324058307,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0012",
+          "semantic_score": 0.4962630676377719,
+          "bm25_score": 16.86853533992759,
+          "combined_score": 0.9631204104536025,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0025",
+          "semantic_score": 0.4217613951432559,
+          "bm25_score": 17.818739136902554,
+          "combined_score": 0.8724892641955881,
+          "page_start": 5,
+          "page_end": 6,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0006",
+          "semantic_score": 0.41951876827386647,
+          "bm25_score": 16.5391358825849,
+          "combined_score": 0.8532329795023341,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0026",
+          "semantic_score": 0.489466417153995,
+          "bm25_score": 8.876239306708847,
+          "combined_score": 0.8527808497990126,
+          "page_start": 6,
+          "page_end": 6,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0005",
+          "semantic_score": 0.3944264557800717,
+          "bm25_score": 18.351469489340392,
+          "combined_score": 0.8415622799013869,
+          "page_start": 1,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0030",
+          "semantic_score": 0.44695589415425513,
+          "bm25_score": 7.740415651510288,
+          "combined_score": 0.7798665893105595,
+          "page_start": 6,
+          "page_end": 6,
+          "section": "3.3 SELF-RAG INFERENCE",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.4269705120029999,
+          "bm25_score": 7.232655558212585,
+          "combined_score": 0.7459188598646256,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.40798329891096097,
+          "bm25_score": 6.907100636926327,
+          "combined_score": 0.7156482605200116,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0019",
+          "semantic_score": 0.37259238604526296,
+          "bm25_score": 8.25209174778785,
+          "combined_score": 0.6838853376571569,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q012",
+      "question": "What datasets and evaluation metrics did the authors use to evaluate SELF-RAG across closed-set, short-form, and long-form generation tasks?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0031",
+        "paper1_c0032",
+        "paper1_c0033",
+        "paper1_c0039"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0031",
+          "semantic_score": 0.5551580509616997,
+          "bm25_score": 20.107796677412473,
+          "combined_score": 0.8395404673042335,
+          "page_start": 6,
+          "page_end": 7,
+          "section": "4.1 TASKS AND DATASETS",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.6723566668780685,
+          "bm25_score": 8.11124656396613,
+          "combined_score": 0.8355694541189574,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.6625718841371133,
+          "bm25_score": 5.769761590353589,
+          "combined_score": 0.8000709499833438,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.6526842600787909,
+          "bm25_score": 6.457966357322227,
+          "combined_score": 0.7969344895337975,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0033",
+          "semantic_score": 0.4913824419663364,
+          "bm25_score": 20.807201968968148,
+          "combined_score": 0.7792307349786438,
+          "page_start": 7,
+          "page_end": 7,
+          "section": "4.1 TASKS AND DATASETS",
+          "is_relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0049",
+          "semantic_score": 0.5792667049866844,
+          "bm25_score": 10.733005864090357,
+          "combined_score": 0.7646961768203118,
+          "page_start": 10,
+          "page_end": 10,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0051",
+          "semantic_score": 0.5652734176917488,
+          "bm25_score": 10.908050786582068,
+          "combined_score": 0.7516946984043034,
+          "page_start": 10,
+          "page_end": 11,
+          "section": "CONCLUSION",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0032",
+          "semantic_score": 0.43244128735368154,
+          "bm25_score": 23.45317164122564,
+          "combined_score": 0.7449237028454498,
+          "page_start": 7,
+          "page_end": 7,
+          "section": "4.1 TASKS AND DATASETS",
+          "is_relevant": true
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0007",
+          "semantic_score": 0.5268136445053715,
+          "bm25_score": 11.840308650701802,
+          "combined_score": 0.7207962297212474,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0012",
+          "semantic_score": 0.5120413635129393,
+          "bm25_score": 13.13182847426531,
+          "combined_score": 0.718932602664872,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q013",
+      "question": "On the ASQA task, what citation precision and citation recall did SELF-RAG 7B and SELF-RAG 13B achieve?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0038",
+        "paper1_c0039",
+        "paper1_c0041"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0041",
+          "semantic_score": 0.5851345802683762,
+          "bm25_score": 15.702861993367536,
+          "combined_score": 0.9644434640538144,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0033",
+          "semantic_score": 0.5606616363489262,
+          "bm25_score": 17.171950124789717,
+          "combined_score": 0.9555459312153899,
+          "page_start": 7,
+          "page_end": 7,
+          "section": "4.1 TASKS AND DATASETS",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0042",
+          "semantic_score": 0.5964881710465134,
+          "bm25_score": 13.143486781155602,
+          "combined_score": 0.9411291701163772,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0088",
+          "semantic_score": 0.5708001698655267,
+          "bm25_score": 12.506735534733274,
+          "combined_score": 0.899949832933042,
+          "page_start": 20,
+          "page_end": 20,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0089",
+          "semantic_score": 0.5777269262026785,
+          "bm25_score": 10.15453368436954,
+          "combined_score": 0.8741702337009597,
+          "page_start": 20,
+          "page_end": 21,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0049",
+          "semantic_score": 0.5380469908714889,
+          "bm25_score": 11.323179310495506,
+          "combined_score": 0.8420130695224115,
+          "page_start": 10,
+          "page_end": 10,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0001",
+          "semantic_score": 0.4827232488515644,
+          "bm25_score": 13.111009043058553,
+          "combined_score": 0.7994934320207004,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "ABSTRACT",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0039",
+          "semantic_score": 0.47486671067340064,
+          "bm25_score": 11.453014744673297,
+          "combined_score": 0.7655154666135793,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "4.3 EXPERIMENTAL SETTINGS",
+          "is_relevant": true
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.5238576105253184,
+          "bm25_score": 5.699032636628311,
+          "combined_score": 0.7422169894437278,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0046",
+          "semantic_score": 0.46379895442259517,
+          "bm25_score": 9.110247279449402,
+          "combined_score": 0.7175458942023323,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q014",
+      "question": "What do the ablation results reveal about the importance of retrieval relevance and ISSUP-based support assessment compared with simply using the top retrieved passage?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0043",
+        "paper1_c0046",
+        "paper1_c0047"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0045",
+          "semantic_score": 0.6820708574140885,
+          "bm25_score": 20.387067538730395,
+          "combined_score": 1.0,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0044",
+          "semantic_score": 0.6150116192850773,
+          "bm25_score": 14.857704447708397,
+          "combined_score": 0.8585203306147565,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0043",
+          "semantic_score": 0.557216957288297,
+          "bm25_score": 12.951970215416596,
+          "combined_score": 0.7717683141969435,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0046",
+          "semantic_score": 0.44201956050762525,
+          "bm25_score": 19.211122317065833,
+          "combined_score": 0.7225867638627377,
+          "page_start": 9,
+          "page_end": 9,
+          "section": "5.2 ANALYSIS",
+          "is_relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0081",
+          "semantic_score": 0.4562366343037452,
+          "bm25_score": 15.788848021489926,
+          "combined_score": 0.6960574803729491,
+          "page_start": 19,
+          "page_end": 19,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0074",
+          "semantic_score": 0.4666763411340684,
+          "bm25_score": 9.088060050138054,
+          "combined_score": 0.62505685470706,
+          "page_start": 17,
+          "page_end": 17,
+          "section": "REFERENCES",
+          "is_relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0035",
+          "semantic_score": 0.41624674031490577,
+          "bm25_score": 11.538310276540773,
+          "combined_score": 0.5999615682653916,
+          "page_start": 7,
+          "page_end": 7,
+          "section": "4.2 BASELINES",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0014",
+          "semantic_score": 0.4072995118828293,
+          "bm25_score": 10.979085465470234,
+          "combined_score": 0.5832811678688828,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0041",
+          "semantic_score": 0.3878949658395997,
+          "bm25_score": 11.846257956245282,
+          "combined_score": 0.5726942437613487,
+          "page_start": 8,
+          "page_end": 8,
+          "section": "5.1 MAIN RESULTS",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0037",
+          "semantic_score": 0.38753252491498025,
+          "bm25_score": 10.085302684479245,
+          "combined_score": 0.5506331936471499,
+          "page_start": 7,
+          "page_end": 8,
+          "section": "4.3 EXPERIMENTAL SETTINGS",
+          "is_relevant": false
+        }
+      ]
+    },
+    {
+      "question_id": "q015",
+      "question": "Did SELF-RAG train its generator using PPO-based reinforcement learning? If not, what training approach did the authors use instead?",
+      "expected_relevant_chunk_ids": [
+        "paper1_c0024",
+        "paper1_c0025",
+        "paper1_c0026"
+      ],
+      "ranked_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "paper1_c0026",
+          "semantic_score": 0.6064872584632944,
+          "bm25_score": 13.324770714135163,
+          "combined_score": 0.9331120078941038,
+          "page_start": 6,
+          "page_end": 6,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "paper1_c0005",
+          "semantic_score": 0.4317502853639272,
+          "bm25_score": 16.610621712128932,
+          "combined_score": 0.788972617003775,
+          "page_start": 1,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "paper1_c0011",
+          "semantic_score": 0.4476462468485124,
+          "bm25_score": 14.04796820590462,
+          "combined_score": 0.7709763067189672,
+          "page_start": 3,
+          "page_end": 3,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "paper1_c0004",
+          "semantic_score": 0.4864009553277431,
+          "bm25_score": 9.047142198762439,
+          "combined_score": 0.7442371868819897,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "paper1_c0025",
+          "semantic_score": 0.3627612071223273,
+          "bm25_score": 18.192103930509383,
+          "combined_score": 0.7359691495612461,
+          "page_start": 5,
+          "page_end": 6,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "paper1_c0024",
+          "semantic_score": 0.42470993836984766,
+          "bm25_score": 9.773068864571995,
+          "combined_score": 0.6873825440742175,
+          "page_start": 5,
+          "page_end": 5,
+          "section": "3.2.2 TRAINING THE GENERATOR MODEL",
+          "is_relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "paper1_c0006",
+          "semantic_score": 0.3944869335328282,
+          "bm25_score": 12.083469988569231,
+          "combined_score": 0.6863917169017857,
+          "page_start": 2,
+          "page_end": 2,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "paper1_c0003",
+          "semantic_score": 0.37915443719970926,
+          "bm25_score": 12.14419643646824,
+          "combined_score": 0.670616388005667,
+          "page_start": 1,
+          "page_end": 1,
+          "section": "INTRODUCTION",
+          "is_relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "paper1_c0017",
+          "semantic_score": 0.4150913987428567,
+          "bm25_score": 8.864528623592733,
+          "combined_score": 0.6644773194902963,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "paper1_c0018",
+          "semantic_score": 0.3715487999565512,
+          "bm25_score": 11.45320091617553,
+          "combined_score": 0.6528813092259294,
+          "page_start": 4,
+          "page_end": 4,
+          "section": "3.1 PROBLEM FORMALIZATION AND OVERVIEW",
+          "is_relevant": false
+        }
+      ]
+    }
+  ],
+  "q009_baseline_evidence_coverage": {
+    "expected_chunk_count": 4,
+    "ranks": {
+      "paper1_c0027": null,
+      "paper1_c0028": null,
+      "paper1_c0029": null,
+      "paper1_c0030": null
+    },
+    "first_relevant_rank": null,
+    "retrieved_at": {
+      "1": 0,
+      "3": 0,
+      "5": 0,
+      "10": 0
+    },
+    "all_expected_recovered_at_10": false
+  }
 }
