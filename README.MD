@@ -47,6 +47,8 @@ The generation layer uses the official `google-genai` SDK behind a provider prot
 
 Gemini returned an observed HTTP 503 `UNAVAILABLE` high-demand failure during a 15-question run. The batch evaluator now records that question as a non-secret `transient_failure` (with status/type, model, application retry count, request ID when available, and failure latency) and continues with later questions. It writes an aggregate success/failure count, successful-only latency statistics, and only the token totals actually returned by successful responses. `evaluate_answers.py` sets its application retry count to zero: the Google SDK may perform its own transient retries, so this avoids multiplying SDK retries for every batch question. `ask.py` retains its configured pipeline retry behavior.
 
+The same run then observed HTTP 429 responses. A 429 is retained as a conservative `permanent_failure`: without an explicit SDK signal, it cannot safely distinguish a retryable short-term rate limit from quota exhaustion. The evaluator stores only safe diagnostics exposed by the SDK error object—HTTP code, provider status, detail type identifiers, and `Retry-After` when present—and never serializes raw response bodies, messages, or headers.
+
 Copy `.env.example` to a local ignored `.env` only through your own environment loader, or set `GEMINI_API_KEY`, `GEMINI_MODEL`, `RAG_TOP_K`, `RAG_CANDIDATE_K`, `RAG_SEMANTIC_WEIGHT`, `RAG_CONTEXT_LIMIT`, `RAG_TIMEOUT`, and `RAG_MAX_RETRIES` in the shell. No key is read from source files or logged.
 
 ## Engineering trade-offs

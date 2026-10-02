@@ -1,7 +1,7 @@
 """Provider implementations. Imports of optional SDKs remain lazy."""
 from __future__ import annotations
 from dataclasses import dataclass
-import os
+import json, os
 from typing import Any
 
 
@@ -29,6 +29,17 @@ def estimate_cost(usage):
     input_price, output_price = os.getenv("RAG_INPUT_COST_PER_MILLION"), os.getenv("RAG_OUTPUT_COST_PER_MILLION")
     if not usage or input_price in (None, "") or output_price in (None, ""): return "unavailable"
     return (usage.get("prompt_tokens", 0) * float(input_price) + usage.get("completion_tokens", 0) * float(output_price)) / 1_000_000
+
+def _provider_diagnostics(error, status_code):
+    """Keep only machine-readable SDK fields; never serialize the raw body/message."""
+    body=getattr(error,"body",None)
+    if isinstance(body,str):
+        try: body=json.loads(body)
+        except json.JSONDecodeError: body={}
+    detail=body.get("error",body) if isinstance(body,dict) else {}
+    headers=getattr(getattr(error,"response",None),"headers",{}) or {}
+    retry_after=headers.get("retry-after") if hasattr(headers,"get") else None
+    return {"http_status":status_code,"provider_status":detail.get("status") if isinstance(detail.get("status"),str) else None,"detail_types":[item.get("@type") for item in detail.get("details",[]) if isinstance(item,dict) and isinstance(item.get("@type"),str)],"retry_after":retry_after if isinstance(retry_after,(str,int,float)) else None}
 
 
 class GeminiProvider:
@@ -61,13 +72,17 @@ class GeminiProvider:
             name = type(error).__name__.lower()
             status_code=getattr(error,"status_code",getattr(error,"code",None))
             status_code=status_code if isinstance(status_code,int) else None
-            if "rate" in name or "resourceexhausted" in name:
+            diagnostics=_provider_diagnostics(error,status_code)
+            # A bare HTTP 429 / RESOURCE_EXHAUSTED response does not tell us
+            # whether a short-lived rate limit or a quota exhaustion occurred.
+            if status_code != 429 and ("rate" in name or "resourceexhausted" in name):
                 wrapped=RateLimitError("Gemini rate limit")
             elif status_code == 503 or any(word in name for word in ("timeout", "deadline", "serviceunavailable", "connection", "server")):
                 wrapped=TransientProviderError("transient Gemini provider failure")
             else:
                 wrapped=ProviderError("Gemini provider request failed")
             wrapped.status_code=status_code
+            wrapped.provider_diagnostics=diagnostics
             raise wrapped from error
         text = getattr(response, "text", None)
         if not isinstance(text, str) or not text.strip(): raise ProviderError("Gemini returned an empty response")

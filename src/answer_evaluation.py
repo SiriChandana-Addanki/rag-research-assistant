@@ -20,7 +20,7 @@ def failure_metadata(error, provider_model, retry_count):
  status_code=getattr(error,"status_code",getattr(error,"code",None))
  status_code=status_code if isinstance(status_code,int) else None
  category="transient_failure" if isinstance(error,TransientProviderError) else "permanent_failure" if isinstance(error,ProviderError) else "evaluation_error"
- return {"evaluation_status":category,"failure":{"error_category":category,"error_type":type(error).__name__,"http_status":status_code,"provider_model":provider_model,"application_retry_count":retry_count,"latency_ms":getattr(error,"latency_ms",None)},"request_id":getattr(error,"request_id",None)}
+ return {"evaluation_status":category,"failure":{"error_category":category,"error_type":type(error).__name__,"http_status":status_code,"provider_diagnostics":getattr(error,"provider_diagnostics",None),"provider_model":provider_model,"application_retry_count":retry_count,"latency_ms":getattr(error,"latency_ms",None)},"request_id":getattr(error,"request_id",None)}
 
 def summarize_answer_evaluation(results):
  counts={status:sum(result["evaluation_status"]==status for result in results) for status in ("generated","transient_failure","permanent_failure","evaluation_error")}

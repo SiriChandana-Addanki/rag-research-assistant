@@ -2,7 +2,7 @@ import json,logging
 import pytest
 from src.answer_evaluation import deterministic_evaluation,run_answer_evaluation
 from src.config import RAGConfig
-from src.providers import GeminiProvider,ProviderResponse,RateLimitError,estimate_cost
+from src.providers import GeminiProvider,ProviderError,ProviderResponse,RateLimitError,estimate_cost
 from src.rag import RAGPipeline
 from src.retrieval import Result
 
@@ -61,3 +61,14 @@ def test_batch_evaluation_preserves_successes_after_a_transient_failure():
  assert results[0]["request_id"]=="request-1" and "temporary" not in json.dumps(results[0])
  assert results[1]["answer"]=="safe answer"
  assert summary["successful_generations"]==1 and summary["transient_failures"]==1 and summary["token_usage"]=={"prompt_tokens":2,"completion_tokens":3,"total_tokens":5}
+def test_gemini_429_is_conservative_but_preserves_safe_sdk_diagnostics():
+ class Response: headers={"retry-after":"30","authorization":"secret"}
+ class ClientError(Exception):
+  code=429; response=Response(); body={"error":{"status":"RESOURCE_EXHAUSTED","message":"secret detail","details":[{"@type":"type.googleapis.com/google.rpc.QuotaFailure"}]}}
+ class Models:
+  def generate_content(self,**_): raise ClientError()
+ provider=GeminiProvider(api_key="not-a-secret",client=type("C",(),{"models":Models()})())
+ with pytest.raises(ProviderError) as raised: provider.generate("prompt",1)
+ assert not isinstance(raised.value,RateLimitError)
+ assert raised.value.provider_diagnostics=={"http_status":429,"provider_status":"RESOURCE_EXHAUSTED","detail_types":["type.googleapis.com/google.rpc.QuotaFailure"],"retry_after":"30"}
+ assert "secret" not in json.dumps(raised.value.provider_diagnostics)
