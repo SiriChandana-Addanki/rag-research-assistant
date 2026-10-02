@@ -102,6 +102,23 @@ class HybridRetriever:
     def search(self, query, k=5):
         first, second=normalize(self.primary.scores(query)), normalize(self.bm25.scores(query))
         return rank(self.chunks, [self.semantic_weight*a+(1-self.semantic_weight)*b for a,b in zip(first,second)], k)
+class MultiQueryRetriever:
+    """Experimental deterministic max-fusion wrapper for explicit query variants.
+
+    ``expand_queries`` must return query variants derived without looking at
+    retrieval results. The original query is always retained, and duplicate
+    variants are removed in order so experiment traces are reproducible.
+    """
+    def __init__(self, primary, expand_queries):
+        self.primary, self.expand_queries, self.chunks = primary, expand_queries, primary.chunks
+    def queries(self, query):
+        variants=[query, *self.expand_queries(query)]
+        return list(dict.fromkeys(variant.strip() for variant in variants if variant.strip()))
+    def scores(self, query):
+        variants=self.queries(query)
+        if not variants: raise ValueError("query must not be empty")
+        return [max(scores) for scores in zip(*(self.primary.scores(variant) for variant in variants))]
+    def search(self, query, k=5): return rank(self.chunks, self.scores(query), k)
 def load_manifest(path="evaluation/chunk_manifest.json"):
     chunks=json.loads(Path(path).read_text(encoding="utf-8")); validate_manifest(chunks); return chunks
 def validate_manifest(chunks):

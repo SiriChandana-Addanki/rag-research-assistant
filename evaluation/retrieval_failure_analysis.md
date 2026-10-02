@@ -3,13 +3,10 @@
 ## Scope and evidence limitation
 
 This review used the tracked retrieval dataset, relevance judgments, chunk manifest,
-source/chunk-generation code, and the rank facts in the request. The claimed
-`evaluation/semantic_retrieval_traces.json` was **not present in this working
-tree** when inspected. Its complete top-10 lists and scores therefore could not
-be independently reproduced: the runtime lacks `sentence_transformers` and the
-model package could not be downloaded. This report does not infer missing rank
-IDs or claim text for unprovided competitors; it maps every explicitly named ID
-to the manifest evidence.
+source/chunk-generation code, and the rank facts in the request. The tracked `evaluation/semantic_retrieval_traces.json` is now available and is
+audited in `retrieval_baseline_analysis.md`. The current runtime still lacks
+`sentence_transformers`, so it cannot rerun neural query encoding; conclusions
+about rankings use the persisted real-run trace rather than fabricated scores.
 
 ## Why `REFERENCES` chunks are retrievable
 
@@ -43,7 +40,7 @@ indicator for this document.
 | q006 | `c0089` (irrelevant) is rank 2; direct inference-overview chunks `c0017`/`c0016` are ranks 4/5. | `c0016,c0017,c0018` | `c0089`=2; other top-10 IDs unavailable. | clearly correct ground truth | Separate verified bibliography from appendix content before testing any section filter. |
 | q009 | No judged chunk is in the supplied top 10; introduction chunks dominate and one `REFERENCES`-labelled chunk is rank 6. | `c0027,c0028,c0029,c0030` | Exact introduction/reference IDs unavailable. | clearly correct ground truth | Recover query-to-chunk scores; use a decomposed query only as a diagnostic. |
 | q010 | Direct generator-data evidence `c0024` is rank 6; introduction chunks rank above it and a `REFERENCES`-labelled chunk is rank 7. | `c0021,c0022,c0023,c0024,c0025` | `c0024`=6; remaining IDs unavailable. | clearly correct ground truth | Compare score contribution by verified content class; do not equate `REFERENCES` with bibliography. |
-| q011 | `c0011`/`c0012` rank 1–2 but are unlabelled; judged `c0025`/`c0026` are ranks 3/5. | `c0021,c0023,c0025,c0026` | `c0011`=1, `c0012`=2, `c0025`=3, `c0026`=5. | likely incomplete ground truth | Human-review `c0011`/`c0012`; both explicitly contrast offline critic training with PPO/RLHF. |
+| q011 | Judgment review confirmed `c0012` directly contrasts offline critic-token augmentation with PPO/RLHF and it is now relevant. | `c0012,c0021,c0023,c0025,c0026` | `c0011` is contextual PPO/RLHF material but does not state the offline contrast. | corrected incomplete ground truth | Preserve the correction; do not add `c0011` merely because it ranks highly. |
 | q014 | Direct ablation chunks `c0043`/`c0046` are ranks 3/4; `REFERENCES` chunks occupy ranks 5/6. | `c0043,c0046,c0047` | `c0043`=3, `c0046`=4; reference IDs unavailable. | clearly correct ground truth | Recover rank-5/6 IDs and distinguish appendix content from bibliography before filtering. |
 
 ## Chunk evidence map

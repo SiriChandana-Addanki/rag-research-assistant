@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.evaluation import load_evaluation_inputs, metrics_with_trace
+from src.evaluation import load_evaluation_inputs, metrics_from_trace, metrics_with_trace
 from src.retrieval import HybridRetriever, SemanticRetriever
 
 
@@ -25,6 +25,7 @@ def main():
     chunks, dataset, judgments = load_evaluation_inputs()
     semantic = SemanticRetriever(chunks, args.model, args.batch_size, artifact_path=args.artifact)
     semantic_metrics, semantic_trace = metrics_with_trace(semantic, dataset, judgments, semantic=True)
+    assert semantic_metrics == metrics_from_trace(semantic_trace, dataset, judgments)
     result = {"model": args.model, "semantic": semantic_metrics}
     traces = {"model": args.model, "configurations": {"semantic": semantic_trace}}
     for weight in (.25, .5, .75):
@@ -32,6 +33,7 @@ def main():
         configuration_metrics, configuration_trace = metrics_with_trace(
             HybridRetriever(chunks, primary=semantic, semantic_weight=weight), dataset, judgments
         )
+        assert configuration_metrics == metrics_from_trace(configuration_trace, dataset, judgments)
         result[name] = configuration_metrics
         traces["configurations"][name] = configuration_trace
     output = Path(args.output)
