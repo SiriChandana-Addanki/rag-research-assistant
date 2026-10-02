@@ -1,0 +1,19 @@
+{
+  "q001": [
+    {"id": "on_demand_retrieval", "query": "How does SELF-RAG avoid unnecessary retrieval during generation?"},
+    {"id": "fixed_retrieval_limit", "query": "What limitation does fixed passage retrieval have for language model responses?"}
+  ],
+  "q009": [
+    {"id": "inference_control", "query": "How does SELF-RAG control its behavior at inference time?"},
+    {"id": "grounding_quality_tradeoff", "query": "How can a system trade off factual grounding and generation quality during inference?"},
+    {"id": "no_retraining_control", "query": "How can retrieval and generation behavior be adjusted without retraining?"}
+  ],
+  "q010": [
+    {"id": "critic_supervision", "query": "How is supervision for SELF-RAG reflection signals created before generator training?"},
+    {"id": "generator_data", "query": "How is training data augmented for the SELF-RAG generator?"}
+  ],
+  "q014": [
+    {"id": "retrieval_relevance_ablation", "query": "What do SELF-RAG ablations show about using relevant retrieved passages?"},
+    {"id": "support_assessment_ablation", "query": "What is the effect of support assessment in SELF-RAG ablations?"}
+  ]
+}
