@@ -1220,6 +1220,7 @@
         "question_id": "q011",
         "question": "How does SELF-RAG's offline critic-based training approach differ from PPO-based reinforcement learning approaches such as RLHF?",
         "expected_relevant_chunk_ids": [
+          "paper1_c0012",
           "paper1_c0021",
           "paper1_c0023",
           "paper1_c0025",
@@ -1235,7 +1236,7 @@
             "page_start": 3,
             "page_end": 3,
             "section": "INTRODUCTION",
-            "is_relevant": false
+            "is_relevant": true
           },
           {
             "rank": 2,
@@ -3043,6 +3044,7 @@
         "question_id": "q011",
         "question": "How does SELF-RAG's offline critic-based training approach differ from PPO-based reinforcement learning approaches such as RLHF?",
         "expected_relevant_chunk_ids": [
+          "paper1_c0012",
           "paper1_c0021",
           "paper1_c0023",
           "paper1_c0025",
@@ -3091,7 +3093,7 @@
             "page_start": 3,
             "page_end": 3,
             "section": "INTRODUCTION",
-            "is_relevant": false
+            "is_relevant": true
           },
           {
             "rank": 5,
@@ -4866,6 +4868,7 @@
         "question_id": "q011",
         "question": "How does SELF-RAG's offline critic-based training approach differ from PPO-based reinforcement learning approaches such as RLHF?",
         "expected_relevant_chunk_ids": [
+          "paper1_c0012",
           "paper1_c0021",
           "paper1_c0023",
           "paper1_c0025",
@@ -4892,7 +4895,7 @@
             "page_start": 3,
             "page_end": 3,
             "section": "INTRODUCTION",
-            "is_relevant": false
+            "is_relevant": true
           },
           {
             "rank": 3,
@@ -6689,6 +6692,7 @@
         "question_id": "q011",
         "question": "How does SELF-RAG's offline critic-based training approach differ from PPO-based reinforcement learning approaches such as RLHF?",
         "expected_relevant_chunk_ids": [
+          "paper1_c0012",
           "paper1_c0021",
           "paper1_c0023",
           "paper1_c0025",
@@ -6715,7 +6719,7 @@
             "page_start": 3,
             "page_end": 3,
             "section": "INTRODUCTION",
-            "is_relevant": false
+            "is_relevant": true
           },
           {
             "rank": 3,

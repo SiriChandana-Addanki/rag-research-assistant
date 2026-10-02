@@ -1,0 +1,7 @@
+{
+  "status": "not_run",
+  "reason": "No trace exists because the controlled semantic experiment could not be executed without sentence_transformers. Run scripts/evaluate_multi_query_retrieval.py in an environment with the baseline model available.",
+  "candidate_count": 127,
+  "final_top_k": 10,
+  "fusion_method": "max_combined_score"
+}
