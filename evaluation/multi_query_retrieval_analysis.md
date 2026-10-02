@@ -44,16 +44,24 @@ rank, and whether all expected chunks appear in the top 10.
 
 ## Execution status, result, and decision
 
-**Not executed in this environment.** `sentence_transformers` is unavailable
-and package installation was denied by the configured package mirror. Query
-embeddings cannot be inferred from the persisted document embedding artifact,
-so reporting rankings, metrics, coverage, latency, false positives, or a
-recommendation would be fabricated. The checked-in JSON artifacts intentionally
-record `not_run` rather than empty metrics.
+**Exact inconsistency found: stale experiment trace data.** The prior
+`multi_query_retrieval_traces.json` was only a `not_run` placeholder: it did
+not contain either a baseline trace or a multi-query trace. It was not evidence
+of a relevance lookup, question-ID, expected-ID representation, or coverage
+calculation mismatch. The corrected artifacts now embed the audited persisted
+75/25 baseline trace and its q009 coverage: R@1/R@3/R@5/R@10/MRR are
+.5333/.7333/.8667/.9333/.6633, and q009 retrieves 0 of 4 expected chunks at
+all evaluated cutoffs. No retrieval behavior or relevance judgment changed.
 
-Therefore the answer to whether q009 was recovered, whether coverage improved,
-what happened to aggregate metrics, whether noise increased, and whether
-integration is justified is **unknown**. Multi-query is **promising but
+The multi-query run is still **not executed in this environment**:
+`sentence_transformers` is unavailable and package installation was denied by
+the configured package mirror. Query embeddings cannot be inferred from the
+persisted document embedding artifact, so multi-query rankings, metrics,
+coverage, latency, false positives, or a recommendation would be fabricated.
+
+Therefore the answer to whether multi-query recovered q009, whether coverage
+improved, what happened to aggregate metrics, whether noise increased, and
+whether integration is justified is **unknown**. Multi-query is **promising but
 insufficiently validated**, not a pipeline change. The next action is to run
 `scripts/evaluate_multi_query_retrieval.py` in an environment with the exact
 baseline model available, inspect its persisted trace, and only then decide
