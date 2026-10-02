@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.evaluation import load_evaluation_inputs, metrics, retrieval_trace
+from src.evaluation import load_evaluation_inputs, metrics_with_trace
 from src.retrieval import HybridRetriever, SemanticRetriever
 
 
@@ -24,14 +24,21 @@ def main():
     args = parser.parse_args()
     chunks, dataset, judgments = load_evaluation_inputs()
     semantic = SemanticRetriever(chunks, args.model, args.batch_size, artifact_path=args.artifact)
-    retrievers={"semantic":semantic}
+    semantic_metrics, semantic_trace = metrics_with_trace(semantic, dataset, judgments, semantic=True)
+    result = {"model": args.model, "semantic": semantic_metrics}
+    traces = {"model": args.model, "configurations": {"semantic": semantic_trace}}
     for weight in (.25, .5, .75):
-        retrievers[f"semantic_{weight:.2f}_bm25_{1 - weight:.2f}"]=HybridRetriever(chunks, primary=semantic, semantic_weight=weight)
-    result = {"model": args.model, **{name:metrics(retriever,dataset,judgments) for name,retriever in retrievers.items()}}
+        name = f"semantic_{weight:.2f}_bm25_{1 - weight:.2f}"
+        configuration_metrics, configuration_trace = metrics_with_trace(
+            HybridRetriever(chunks, primary=semantic, semantic_weight=weight), dataset, judgments
+        )
+        result[name] = configuration_metrics
+        traces["configurations"][name] = configuration_trace
     output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     trace_output = Path(args.trace_output)
-    traces={"model":args.model,"max_rank":10,"configurations":{name:retrieval_trace(retriever,dataset,judgments) for name,retriever in retrievers.items()}}
+    trace_output.parent.mkdir(parents=True, exist_ok=True)
     trace_output.write_text(json.dumps(traces, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
 
