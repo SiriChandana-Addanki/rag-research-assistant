@@ -25,6 +25,17 @@ def _scores(retriever, query):
     return semantic, bm25, combined
 
 
+def evidence_coverage(ranked_chunks, expected_chunk_ids):
+    """Report coverage without assuming a list or set representation of gold IDs."""
+    expected = sorted(set(expected_chunk_ids))
+    ranks = {chunk_id: next((entry["rank"] for entry in ranked_chunks if entry["chunk_id"] == chunk_id), None)
+             for chunk_id in expected}
+    return {"expected_chunk_count": len(expected), "ranks": ranks,
+            "first_relevant_rank": min((rank for rank in ranks.values() if rank is not None), default=None),
+            "retrieved_at": {str(k): sum(rank is not None and rank <= k for rank in ranks.values()) for k in KS},
+            "all_expected_recovered_at_10": all(rank is not None and rank <= 10 for rank in ranks.values())}
+
+
 def experiment_trace(retriever, dataset, judgments, variants, final_k=max(KS)):
     """Return baseline/multi traces and q009-style coverage without changing retrieval."""
     gold = {item["question_id"]: set(item["relevant_chunk_ids"]) for item in judgments}
@@ -60,10 +71,6 @@ def experiment_trace(retriever, dataset, judgments, variants, final_k=max(KS)):
         fused_trace = {**base, "query_count": len(formulations), "fusion_method": "max_combined_score", "query_variants": variant_traces, "ranked_chunks": fused_entries}
         baseline.append(base); multi.append(fused_trace)
         if question_id == "q009":
-            ranks = {chunk_id: next((entry["rank"] for entry in fused_entries if entry["chunk_id"] == chunk_id), None) for chunk_id in sorted(relevant)}
-            coverage[question_id] = {"expected_chunk_count": len(relevant), "ranks": ranks,
-                "first_relevant_rank": min((rank for rank in ranks.values() if rank is not None), default=None),
-                "retrieved_at": {str(k): sum(rank is not None and rank <= k for rank in ranks.values()) for k in KS},
-                "all_expected_recovered_at_10": all(rank is not None and rank <= 10 for rank in ranks.values())}
+            coverage[question_id] = evidence_coverage(fused_entries, relevant)
     return {"baseline": baseline, "multi_query": multi, "q009_evidence_coverage": coverage,
             "metrics": {"baseline": metrics_from_trace(baseline, dataset, judgments), "multi_query": metrics_from_trace(multi, dataset, judgments)}}
