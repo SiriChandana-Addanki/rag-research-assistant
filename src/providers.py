@@ -59,10 +59,16 @@ class GeminiProvider:
             )
         except Exception as error:
             name = type(error).__name__.lower()
-            if "rate" in name or "resourceexhausted" in name: raise RateLimitError("Gemini rate limit") from error
-            if any(word in name for word in ("timeout", "deadline", "serviceunavailable", "connection")):
-                raise TransientProviderError("transient Gemini provider failure") from error
-            raise ProviderError("Gemini provider request failed") from error
+            status_code=getattr(error,"status_code",getattr(error,"code",None))
+            status_code=status_code if isinstance(status_code,int) else None
+            if "rate" in name or "resourceexhausted" in name:
+                wrapped=RateLimitError("Gemini rate limit")
+            elif status_code == 503 or any(word in name for word in ("timeout", "deadline", "serviceunavailable", "connection", "server")):
+                wrapped=TransientProviderError("transient Gemini provider failure")
+            else:
+                wrapped=ProviderError("Gemini provider request failed")
+            wrapped.status_code=status_code
+            raise wrapped from error
         text = getattr(response, "text", None)
         if not isinstance(text, str) or not text.strip(): raise ProviderError("Gemini returned an empty response")
         return ProviderResponse(text=text.strip(), token_usage=_usage(response), model=self.model_name)

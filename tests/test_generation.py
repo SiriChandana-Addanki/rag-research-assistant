@@ -1,6 +1,6 @@
 import json,logging
 import pytest
-from src.answer_evaluation import deterministic_evaluation
+from src.answer_evaluation import deterministic_evaluation,run_answer_evaluation
 from src.config import RAGConfig
 from src.providers import GeminiProvider,ProviderResponse,RateLimitError,estimate_cost
 from src.rag import RAGPipeline
@@ -47,3 +47,17 @@ def test_environment_config(monkeypatch):
 def test_cost_requires_configured_prices(monkeypatch):
  monkeypatch.setenv("RAG_INPUT_COST_PER_MILLION","1"); monkeypatch.setenv("RAG_OUTPUT_COST_PER_MILLION","2")
  assert estimate_cost({"prompt_tokens":3,"completion_tokens":4})==11/1_000_000
+def test_batch_evaluation_preserves_successes_after_a_transient_failure():
+ class Pipeline:
+  retries=0; calls=[]
+  def answer(self,question,*_):
+   self.calls.append(question)
+   if question=="first":
+    error=RateLimitError("temporary"); error.status_code=503; error.request_id="request-1"; error.latency_ms=12.5; raise error
+   return {"answer":"safe answer","citations":[],"citation_validation":True,"retrieved_chunk_ids":["c1"],"token_usage":{"prompt_tokens":2,"completion_tokens":3,"total_tokens":5},"cost":"unavailable","latency":{"total_ms":20.0},"evaluation_status":"generated"}
+ pipeline=Pipeline(); results,summary=run_answer_evaluation(pipeline,[{"id":"q1","question":"first"},{"id":"q2","question":"second"}],1,1,"gemini-test")
+ assert pipeline.calls==["first","second"]
+ assert results[0]["evaluation_status"]=="transient_failure" and results[0]["failure"]["http_status"]==503
+ assert results[0]["request_id"]=="request-1" and "temporary" not in json.dumps(results[0])
+ assert results[1]["answer"]=="safe answer"
+ assert summary["successful_generations"]==1 and summary["transient_failures"]==1 and summary["token_usage"]=={"prompt_tokens":2,"completion_tokens":3,"total_tokens":5}
