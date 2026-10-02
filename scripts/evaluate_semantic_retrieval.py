@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.evaluation import load_evaluation_inputs, metrics
+from src.evaluation import load_evaluation_inputs, metrics, retrieval_trace
 from src.retrieval import HybridRetriever, SemanticRetriever
 
 
@@ -20,16 +20,19 @@ def main():
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--artifact", default="evaluation/semantic_embeddings.json")
     parser.add_argument("--output", default="evaluation/semantic_retrieval_results.json")
+    parser.add_argument("--trace-output", default="evaluation/semantic_retrieval_traces.json")
     args = parser.parse_args()
     chunks, dataset, judgments = load_evaluation_inputs()
     semantic = SemanticRetriever(chunks, args.model, args.batch_size, artifact_path=args.artifact)
-    result = {"model": args.model, "semantic": metrics(semantic, dataset, judgments)}
+    retrievers={"semantic":semantic}
     for weight in (.25, .5, .75):
-        result[f"semantic_{weight:.2f}_bm25_{1 - weight:.2f}"] = metrics(
-            HybridRetriever(chunks, primary=semantic, semantic_weight=weight), dataset, judgments
-        )
+        retrievers[f"semantic_{weight:.2f}_bm25_{1 - weight:.2f}"]=HybridRetriever(chunks, primary=semantic, semantic_weight=weight)
+    result = {"model": args.model, **{name:metrics(retriever,dataset,judgments) for name,retriever in retrievers.items()}}
     output = Path(args.output)
     output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    trace_output = Path(args.trace_output)
+    traces={"model":args.model,"max_rank":10,"configurations":{name:retrieval_trace(retriever,dataset,judgments) for name,retriever in retrievers.items()}}
+    trace_output.write_text(json.dumps(traces, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
 
 
