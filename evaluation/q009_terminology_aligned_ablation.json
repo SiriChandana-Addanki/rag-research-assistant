@@ -1,0 +1,10 @@
+{
+  "experiment_type": "controlled_q009_terminology_aligned_query_ablation",
+  "status": "not_run",
+  "reason": "sentence-transformers is required for SemanticRetriever",
+  "required_local_command": "python scripts/evaluate_q009_terminology_ablation.py",
+  "environment": {
+    "python": "3.14.4"
+  },
+  "predeclared_aligned_query": "How can SELF-RAG use a Retrieve=Yes threshold, Critique/reflection-token weighted decoding including ISSUP support, and hard Critique-token filtering to control retrieval, evidence grounding, and generation quality at inference time with no additional training?"
+}
