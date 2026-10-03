@@ -1,71 +1,76 @@
-# RAG Research Assistant
+# RAG Research Assistant — Grounded Answers, Citations, and Evaluation
 
-A small, inspectable RAG system over the SELF-RAG paper. It preserves the existing PDF ingestion and structure-aware chunking pipeline, then evaluates local TF-IDF/cosine, BM25, and hybrid retrieval against manually reviewed chunk-level evidence labels.
+A local research-assistant baseline for answering questions over source PDFs. It preserves document/page metadata through ingestion and structure-aware chunking, uses measured semantic + BM25 hybrid retrieval, constructs bounded evidence context, and returns traceable chunk/page citations. Retrieval is evaluated against a tracked 15-question, 127-chunk corpus; experiments and failure analysis are retained as versioned artifacts rather than silently changing the production path.
 
 ## Architecture
-`PDF → ingestion → chunks + page/section metadata → BM25 + semantic embeddings → weighted hybrid retrieval → optional cross-encoder reranking → bounded structured context → Gemini (or another Provider) → grounded JSON answer → validated citations → evaluation and observability`.
 
-Retrieved text is untrusted evidence, never executable instructions. Inputs and contexts are bounded; citations are validated against retrieved chunk IDs; structured logs intentionally omit secrets.
-
-## Components
-- `src/ingestion.py`, `src/chunking.py`: existing page-aware extraction and structure-aware chunks.
-- `src/retrieval.py`: deterministic TF-IDF/cosine lexical baseline, BM25, normalized hybrid retrieval, and an optional sentence-transformer semantic retriever. Semantic embeddings are normalized and may be cached in a model-and-corpus-fingerprinted local artifact.
-- `src/rag.py`: grounded orchestration, limits, citation validation, request IDs, and stage-safe errors. LLMs are injected/configured externally—no key is hard-coded.
-- `src/evaluation.py`: judgment validation and Recall@1/3/5/10 plus MRR.
-
-The TF-IDF baseline is intentionally dependency-free; it is not a claim that TF-IDF is a neural embedding model.
-
-## Reproducible evaluation
-```bash
-python3 scripts/evaluate_retrieval.py
-python3 scripts/benchmark_retrieval.py
-python3 scripts/evaluate_semantic_retrieval.py
-pytest -q
+```mermaid
+flowchart TD
+  A[PDF documents in data/raw] --> B[Ingestion]
+  B --> C[Structure-aware chunking + metadata]
+  C --> D[Chunk manifest / embeddings]
+  D --> E[Semantic retrieval + BM25]
+  E --> F[0.75 semantic / 0.25 BM25 hybrid]
+  F --> G[Bounded context + retrieval trace]
+  G --> H[Optional Gemini generation]
+  H --> I[Grounded answer + validated chunk/page citations]
+  D --> J[Evaluation dataset + relevance judgments]
+  F --> K[Recall/MRR + per-question traces + failure analysis]
+  J --> K
 ```
-`evaluate_semantic_retrieval.py` writes `evaluation/semantic_retrieval_results.json` and, by default, reuses `evaluation/semantic_embeddings.json` when its model and chunk corpus fingerprint match. It keeps the historical lexical artifact untouched. Scores and latency files are generated from the local 15-question dataset and 127 tracked chunks; re-run commands after retrieval changes.
 
-## Verification status
-### VERIFIED
-The lexical evaluation was run against the tracked 15-question dataset in the available runner:
+## Final retrieval configuration
 
-| Retriever | Recall@1 | Recall@3 | Recall@5 | Recall@10 | MRR |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| TF-IDF/cosine | 0.3333 | 0.7333 | 0.9333 | 1.0000 | 0.5883 |
-| BM25 | 0.4000 | 0.8000 | 0.9333 | 0.9333 | 0.6156 |
-| TF-IDF + BM25 hybrid (0.50 / 0.50) | 0.3333 | 0.8000 | 0.8000 | 1.0000 | 0.5956 |
-| Semantic (all-MiniLM-L6-v2) | 0.2667 | 0.6667 | 0.6667 | 0.9333 | 0.4817 |
-| Semantic 75% + BM25 25% | 0.5333 | 0.7333 | 0.8667 | 0.9333 | 0.6522 |
+* **Embedding model:** `sentence-transformers/all-MiniLM-L6-v2`.
+* **Production retrieval:** normalized-score hybrid retrieval: **0.75 semantic / 0.25 BM25**. The production default answer context is five chunks (`RAG_TOP_K=5`); the frozen retrieval evaluation reports rankings through top 10.
+* **Not selected:** no reranker, MultiQuery, RRF, or round-robin fusion is imported by the production path. These remain isolated experimental code/artifacts because the available evidence does not justify their extra complexity as a general improvement.
+* Scores are deterministically ordered by descending score and ascending `chunk_id` for ties. The pipeline trace contains query, configuration class, ranks, scores, source/page/section metadata, citations, generation status, and component latency.
 
-The temporary reranking experiment measured R@1/R@3/R@5/R@10/MRR of 0.4000/0.7333/0.8000/0.9333/0.5822. It is labelled experimental because it is not yet emitted by a reproducible tracked evaluation command. The evaluation set has only 15 questions, so these results guide development rather than establish universal superiority.
+## Measured evaluation baseline
 
-The same run measured lexical hybrid index construction at 115.786 ms. Across 150 warm searches, p50/p95/p99 were 8.205/8.943/9.704 ms. These are local, single-run measurements, not a production latency claim. Deterministic RAG tests cover retrieved citations, invalid citation rejection, empty retrieval, oversized context, malformed provider output, and timeout retry behavior.
+The selected baseline was measured on this repository's **15-question evaluation dataset** and frozen relevance judgments, not as a universal performance claim. The persisted selected semantic/BM25 trace reports: **Recall@1 0.5333, Recall@3 0.7333, Recall@5 0.8667, Recall@10 0.9333, MRR 0.6633**. The complete comparisons and question-level analysis are in `evaluation/semantic_retrieval_results.json`, `evaluation/semantic_retrieval_traces.json`, and `evaluation/retrieval_baseline_analysis.md`.
 
-### IMPLEMENTED BUT NOT VERIFIED
-`SemanticRetriever` accepts a configurable sentence-transformers model name and batch size, normalizes embeddings before cosine scoring, preserves the original chunk dictionaries, and can reuse a local embedding artifact. `evaluate_semantic_retrieval.py` evaluates semantic retrieval and semantic/BM25 weights of 0.25/0.75, 0.50/0.50, and 0.75/0.25. `CrossEncoderReranker` remains an optional interface for hybrid top-N candidates followed by final-K reranking.
+Hybrid retrieval was chosen because semantic similarity handles paraphrase while BM25 rewards exact source terminology. On this small evaluation set, the .75/.25 setting had the highest observed Recall@1 and MRR; .50/.50 had higher Recall@3, so the choice is documented as a measured trade-off, not a general theorem.
 
-The generation layer uses the official `google-genai` SDK behind a provider protocol. `scripts/ask.py` runs one question and `scripts/evaluate_answers.py` writes per-question answer records without reference answers or fabricated quality scores. Provider output must be JSON with an answer and citations, and citations are rejected unless they identify a retrieved chunk and a matching document/page. Token usage is recorded when Gemini supplies it; cost is reported only when both local `RAG_INPUT_COST_PER_MILLION` and `RAG_OUTPUT_COST_PER_MILLION` are configured.
+## q009 controlled terminology-aligned ablation
 
-Gemini returned an observed HTTP 503 `UNAVAILABLE` high-demand failure during a 15-question run. The batch evaluator now records that question as a non-secret `transient_failure` (with status/type, model, application retry count, request ID when available, and failure latency) and continues with later questions. It writes an aggregate success/failure count, successful-only latency statistics, and only the token totals actually returned by successful responses. `evaluate_answers.py` sets its application retry count to zero: the Google SDK may perform its own transient retries, so this avoids multiplying SDK retries for every batch question. `ask.py` retains its configured pipeline retry behavior.
+The final predeclared control is the original q009 question. The single aligned query is:
 
-The same run then observed HTTP 429 responses. A 429 is retained as a conservative `permanent_failure`: without an explicit SDK signal, it cannot safely distinguish a retryable short-term rate limit from quota exhaustion. The evaluator stores only safe diagnostics exposed by the SDK error object—HTTP code, provider status, detail type identifiers, and `Retry-After` when present—and never serializes raw response bodies, messages, or headers.
+> How can SELF-RAG use a Retrieve=Yes threshold, Critique/reflection-token weighted decoding including ISSUP support, and hard Critique-token filtering to control retrieval, evidence grounding, and generation quality at inference time with no additional training?
 
-Copy `.env.example` to a local ignored `.env` only through your own environment loader, or set `GEMINI_API_KEY`, `GEMINI_MODEL`, `RAG_TOP_K`, `RAG_CANDIDATE_K`, `RAG_SEMANTIC_WEIGHT`, `RAG_CONTEXT_LIMIT`, `RAG_TIMEOUT`, and `RAG_MAX_RETRIES` in the shell. No key is read from source files or logged.
+Its terms are taken directly from `paper1_c0027`–`paper1_c0030`. It changes **only** query wording; it freezes the 127 chunks, metadata, model, BM25, .75/.25 weighting, relevance judgments, ranking policy, and final-k, with no reranking, MultiQuery, or fusion. `scripts/evaluate_q009_terminology_ablation.py` persists per-chunk semantic/BM25/hybrid ranks and scores, top-10/top-30 entry, Recall@10/@30, evidence coverage, and q009 MRR when the model dependency is available.
 
-## Engineering trade-offs
-BM25 remains useful for exact terminology while embeddings capture related phrasing; weighted hybrid scoring deliberately combines those signals and must be measured, not assumed. Reranking can improve ordering but adds latency. The provider protocol avoids vendor lock-in and mocks keep tests deterministic. Local retrieval bounds API use and cost; context is length-limited and treated as untrusted data, while validated citations make the evidence trail inspectable.
+**Current execution status: not_run in this environment.** Python 3.14.4 lacks `sentence_transformers` (and its compatible Torch stack), so no q009 ranks or metrics were fabricated. The persisted status and exact query are in `evaluation/q009_terminology_aligned_ablation.json`. Run the command in a supported environment before making any production retrieval change. Therefore the simpler measured .75/.25 baseline remains selected.
 
-### BLOCKED BY ENVIRONMENT
-The available command runner is Python 3.14.4 and cannot execute the repository's Windows `.res/Scripts/python.exe` (`Permission denied`); its configured Python is 3.10.0. In the available runner, `sentence_transformers`, `torch`, `rank_bm25`, `numpy`, and `sklearn` were absent. Semantic evaluation therefore stopped with `RuntimeError: sentence-transformers is required for SemanticRetriever`; no semantic, semantic-hybrid, or cross-encoder metrics were written or claimed. No package was installed because the accessible interpreter is outside the project Windows virtual environment. No real provider credential was configured or required.
+## Repository map and reproducibility
 
-## Failure handling and limitations
-Empty/oversized queries, malformed manifests, invalid relevance labels, invalid citations, and empty context fail clearly. LLM timeouts/API failures and malformed provider output require a concrete provider adapter and are not silently masked. The system has no authentication, deployment service, neural embedding model, reranker, or production load test.
+| Need | Location / command |
+| --- | --- |
+| Add source PDFs | `data/raw/` |
+| Ingest and build a manifest | `python scripts/build_gold_retrieval_set.py` (see script arguments) |
+| Ask with generation | `GEMINI_API_KEY=... python scripts/ask.py "What are reflection tokens?"` |
+| Inspect retrieved evidence without an LLM | `python scripts/ask.py --no-generation "What are reflection tokens?"` |
+| Lexical baseline evaluation | `python scripts/evaluate_retrieval.py` |
+| Semantic/hybrid evaluation | `python scripts/evaluate_semantic_retrieval.py` |
+| Final q009 controlled ablation | `python scripts/evaluate_q009_terminology_ablation.py` |
+| Tests | `pytest -q` |
 
-## Decision record
-The concise rationale for chunking, baselines, hybrid scoring, deferred reranking, metrics, citations, and observability is in [docs/adr/ADR-001-through-008.md](docs/adr/ADR-001-through-008.md).
+Install dependencies using a Python version supported by the pinned `sentence-transformers`/Torch packages: `python -m pip install -r requirements.txt`. Semantic evaluation may download the embedding model on its first run. `GEMINI_API_KEY` is required only for live generation; `--no-generation` does not call a provider. Generated answer citations are accepted only when their `document_id`, `chunk_id`, and page match retrieved evidence.
 
-## Status
-**Implemented and verified:** lexical TF-IDF, BM25, historical lexical hybrid evaluation, citation checks, bounded context, deterministic provider behavior, and retrieval benchmark.
+## Grounding, failure handling, and observability
 
-**Implemented but not executed:** live `SemanticRetriever` and `CrossEncoderReranker` evaluations. They require `sentence-transformers` and model downloads, unavailable in this runtime.
+Retrieved context is explicitly marked as untrusted data in the prompt. Empty retrieval returns `insufficient_evidence` instead of calling a model; no-provider mode returns evidence and traceable citations without pretending an answer was generated. Provider responses must be JSON and their citations are validated against selected chunks/pages. These measures reduce unsupported answers but do not guarantee zero hallucinations; a model can still give a weakly supported answer if retrieval is weak.
 
-**Future work:** configure a real LLM provider via environment-managed credentials, then measure generation latency, tokens, cost, and model-based groundedness.
+Evaluation runs preserve question text, relevance labels, ranked chunks, scores, pages, sections, and relevance flags. Metrics are recomputed from traces and reject label drift. Historical MultiQuery, fusion, candidate-reachability, and reranking work remains under `src/`/`evaluation/` for inspection but is not on the production dependency path.
+
+## Failure analysis and limits
+
+The retained analysis investigates retrieval failures at question, candidate-rank, chunk, and fusion levels. q009 requires distributed evidence across four chunks and was a top-10 miss in the frozen baseline; the planned aligned-query result must be measured before it can influence production. The project is intentionally limited by PDF extraction quality (especially scans/OCR, tables, equations, and unusual layouts), a small domain-specific evaluation set, embedding-model limitations, provider availability/rate limits, and local inference resources.
+
+## Portfolio engineering focus
+
+This project demonstrates a compact RAG architecture with hybrid retrieval, evaluation-first development, controlled retrieval experiments, failure analysis, grounding and citation validation, structured request traces, reproducibility artifacts, and explicit complexity/quality trade-offs. It does not claim deployment at enterprise scale, autonomous research, perfect retrieval, or hallucination-free generation.
+
+## Additional records
+
+Architecture decisions: `docs/adr/ADR-001-through-008.md`. Historical experiments and analyses: `evaluation/`. The tracked artifacts distinguish the current baseline from rejected or unselected experiments.

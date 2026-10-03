@@ -23,13 +23,16 @@ def test_grounded_pipeline_uses_retrieved_citations(chunks):
    return json.dumps({"answer":"Grounded fixture.","citations":citations})
  p=RAGPipeline(chunks,provider=Provider())
  out=p.answer('What are reflection tokens?',2); assert out['answer']=='Grounded fixture.' and len(out['citations'])==2
+ assert out['retrieved_chunks'][0]['rank']==1 and out['retrieved_chunks'][0]['chunk_id'] in out['retrieved_chunk_ids']
+ assert out['retrieved_chunks'][0]['page_start'] <= out['retrieved_chunks'][0]['page_end']
  with pytest.raises(ValueError): validate_citations([Citation('paper1',1,'missing')],[])
 def test_pipeline_input_limits(chunks):
  with pytest.raises(ValueError): RAGPipeline(chunks).answer(' ')
 def test_pipeline_handles_empty_retrieval_and_oversized_context(chunks):
  class EmptyRetriever:
   def search(self, query, k): return []
- assert RAGPipeline(chunks,retriever=EmptyRetriever()).answer('question')['citations']==[]
+ empty=RAGPipeline(chunks,retriever=EmptyRetriever()).answer('question')
+ assert empty['citations']==[] and empty['evaluation_status']=='insufficient_evidence' and 'total_ms' in empty['latency']
  huge={**chunks[0],"chunk_text":"x"*(MAX_CONTEXT+1)}
  assert build_context([Result(huge,1.0)])==''
 def test_pipeline_retries_timeouts_and_rejects_malformed_provider_response(chunks):
