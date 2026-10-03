@@ -35,7 +35,7 @@ class RAGConfig:
             raise ValueError("RAG_TIMEOUT must be positive")
         return cls(
             gemini_api_key=os.getenv("GEMINI_API_KEY"),
-            gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+            gemini_model=os.getenv("GEMINI_MODEL", "gemini-3.8-flash"),
             top_k=_positive_int("RAG_TOP_K", "5"),
             candidate_k=_positive_int("RAG_CANDIDATE_K", "10"),
             semantic_weight=_weight("RAG_SEMANTIC_WEIGHT", ".75"),
