@@ -35,6 +35,17 @@ def test_pipeline_handles_empty_retrieval_and_oversized_context(chunks):
  assert empty['citations']==[] and empty['evaluation_status']=='insufficient_evidence' and 'total_ms' in empty['latency']
  huge={**chunks[0],"chunk_text":"x"*(MAX_CONTEXT+1)}
  assert build_context([Result(huge,1.0)])==''
+def test_pipeline_skips_generation_for_retrieved_but_unsupported_question(chunks):
+ class Retriever:
+  def search(self, query, k): return [Result(chunks[0],1.0)]
+ class Provider:
+  calls=0
+  def generate(self, prompt, timeout_seconds): self.calls+=1; raise AssertionError("generation must not be called")
+ provider=Provider()
+ result=RAGPipeline(chunks,provider=provider,retriever=Retriever()).answer("What is the population of Hyderabad?")
+ assert result["evaluation_status"]=="insufficient_evidence"
+ assert result["answer"]=="Insufficient retrieved evidence." and result["citations"]==[]
+ assert result["citation_validation"] is False and provider.calls==0
 def test_pipeline_retries_timeouts_and_rejects_malformed_provider_response(chunks):
  class RetryingProvider:
   calls=0

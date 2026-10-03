@@ -47,7 +47,7 @@ class GeminiProvider:
     def __init__(self, api_key=None, model_name=None, client=None, client_factory=None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key: raise ValueError("GEMINI_API_KEY is required")
-        self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        self.model_name = model_name or os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
         self.client = client
         self._client_factory = client_factory
         if client is None and client_factory is None:

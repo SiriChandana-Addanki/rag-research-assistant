@@ -16,7 +16,7 @@ def test_gemini_requires_key(monkeypatch):
 def test_gemini_configures_timeout_on_client_not_generate_content():
  class Models:
   def generate_content(self,model,contents,config):
-   assert model=="gemini-2.5-flash" and contents=="prompt"
+   assert model=="gemini-3.8-flash" and contents=="prompt"
    assert config=={"response_mime_type":"application/json"}
    return type("R",(),{"text":payload(),"usage_metadata":type("U",(),{"prompt_token_count":3,"candidates_token_count":4,"total_token_count":7})()})()
  client=type("C",(),{"models":Models()})()
@@ -29,14 +29,14 @@ def test_pipeline_rejects_invalid_model_citation_and_secret_safe_log(caplog):
  class Provider:
   def generate(self,*_): return ProviderResponse(payload([{"document_id":"paper1","chunk_id":"bad","page":2}]))
  caplog.set_level(logging.INFO)
- with pytest.raises(ValueError,match="invalid citation"): RAGPipeline([],provider=Provider(),retriever=Retriever()).answer("q")
+ with pytest.raises(ValueError,match="invalid citation"): RAGPipeline([],provider=Provider(),retriever=Retriever()).answer("evidence")
  assert "not-a-secret" not in caplog.text
 def test_rate_limit_is_bounded_not_silently_retried_forever():
  class Provider:
   calls=0
   def generate(self,*_): self.calls+=1; raise RateLimitError("limited")
  provider=Provider()
- with pytest.raises(RateLimitError): RAGPipeline([],provider=provider,retriever=Retriever(),retries=1).answer("q")
+ with pytest.raises(RateLimitError): RAGPipeline([],provider=provider,retriever=Retriever(),retries=1).answer("evidence")
  assert provider.calls==2
 def test_deterministic_answer_evaluation():
  result={"answer":"yes","citations":[{"document_id":"paper1","chunk_id":"c1","page":2}],"context":"x"}
