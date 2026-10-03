@@ -16,7 +16,7 @@ def test_gemini_requires_key(monkeypatch):
 def test_gemini_configures_timeout_on_client_not_generate_content():
  class Models:
   def generate_content(self,model,contents,config):
-   assert model=="gemini-2.5-flash" and contents=="prompt"
+   assert model=="gemini-3.8-flash" and contents=="prompt"
    assert config=={"response_mime_type":"application/json"}
    return type("R",(),{"text":payload(),"usage_metadata":type("U",(),{"prompt_token_count":3,"candidates_token_count":4,"total_token_count":7})()})()
  client=type("C",(),{"models":Models()})()
