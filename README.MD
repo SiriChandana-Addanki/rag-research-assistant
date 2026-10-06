@@ -1,76 +1,72 @@
-# RAG Research Assistant — Grounded Answers, Citations, and Evaluation
+# RAG Research Assistant
 
-A local research-assistant baseline for answering questions over source PDFs. It preserves document/page metadata through ingestion and structure-aware chunking, uses measured semantic + BM25 hybrid retrieval, constructs bounded evidence context, and returns traceable chunk/page citations. Retrieval is evaluated against a tracked 15-question, 127-chunk corpus; experiments and failure analysis are retained as versioned artifacts rather than silently changing the production path.
+## Purpose and engineering impact
 
-## Architecture
+A CLI research assistant that answers questions over a small corpus of research PDFs with retrieved evidence and validated page/chunk citations. The project demonstrates document-aware ingestion, deterministic hybrid retrieval, grounded generation, failure handling, and evaluation artifacts that make trade-offs inspectable.
 
-```mermaid
-flowchart TD
-  A[PDF documents in data/raw] --> B[Ingestion]
-  B --> C[Structure-aware chunking + metadata]
-  C --> D[Chunk manifest / embeddings]
-  D --> E[Semantic retrieval + BM25]
-  E --> F[0.75 semantic / 0.25 BM25 hybrid]
-  F --> G[Bounded context + retrieval trace]
-  G --> H[Optional Gemini generation]
-  H --> I[Grounded answer + validated chunk/page citations]
-  D --> J[Evaluation dataset + relevance judgments]
-  F --> K[Recall/MRR + per-question traces + failure analysis]
-  J --> K
+## Stack and flow
+
+- **Tech stack:** Python 3.10, PyMuPDF, sentence-transformers, BM25, pytest, Docker.
+- **LLM:** Google Gemini through the official `google-genai` SDK. Generation is optional.
+- **Input:** Research PDFs in `data/raw/` when rebuilding the corpus; a question string when using the assistant.
+- **Output:** JSON answer, citations, retrieved evidence, retrieval trace, and execution status on stdout.
+- **Architecture:** PDFs → page-aware ingestion and structure-aware chunks → checked-in chunk manifest → `all-MiniLM-L6-v2` semantic scores plus BM25 → normalized-score hybrid retrieval → bounded evidence context → optional Gemini JSON response → citation validation. Production remains at semantic/BM25 weights **0.75/0.25**, `RAG_TOP_K=5`, and `RAG_CANDIDATE_K=10`; experimental reranking, MultiQuery, and fusion are not in the production path.
+
+## Measured results
+
+On the frozen 15-question dataset and relevance judgments, the recorded selected hybrid baseline is Recall@1 **0.5333**, Recall@3 **0.7333**, Recall@5 **0.8667**, Recall@10 **0.9333**, and MRR **0.6633**. These are repository-specific measurements, not general performance claims. See `evaluation/semantic_retrieval_results.json` and `evaluation/retrieval_baseline_analysis.md`. The q009 aligned ablation remains `not_run`; no result is inferred for it.
+
+## Run locally
+
+Install dependencies with `python -m pip install -r requirements.txt`. Then run:
+
+```powershell
+python scripts/ask.py --no-generation "What are reflection tokens?"
 ```
 
-## Final retrieval configuration
+Run with live generation by supplying the key through the environment. Do not put it in source or the image:
 
-* **Embedding model:** `sentence-transformers/all-MiniLM-L6-v2`.
-* **Production retrieval:** normalized-score hybrid retrieval: **0.75 semantic / 0.25 BM25**. The production default answer context is five chunks (`RAG_TOP_K=5`); the frozen retrieval evaluation reports rankings through top 10.
-* **Not selected:** no reranker, MultiQuery, RRF, or round-robin fusion is imported by the production path. These remain isolated experimental code/artifacts because the available evidence does not justify their extra complexity as a general improvement.
-* Scores are deterministically ordered by descending score and ascending `chunk_id` for ties. The pipeline trace contains query, configuration class, ranks, scores, source/page/section metadata, citations, generation status, and component latency.
+```powershell
+$env:GEMINI_API_KEY = "your-key"
+python scripts/ask.py "What are reflection tokens?"
+```
 
-## Measured evaluation baseline
+`GEMINI_MODEL` optionally selects the model; default is `gemini-3.8-flash`. Retrieval settings remain configurable through existing `RAG_*` environment variables, whose defaults preserve the selected production configuration.
 
-The selected baseline was measured on this repository's **15-question evaluation dataset** and frozen relevance judgments, not as a universal performance claim. The persisted selected semantic/BM25 trace reports: **Recall@1 0.5333, Recall@3 0.7333, Recall@5 0.8667, Recall@10 0.9333, MRR 0.6633**. The complete comparisons and question-level analysis are in `evaluation/semantic_retrieval_results.json`, `evaluation/semantic_retrieval_traces.json`, and `evaluation/retrieval_baseline_analysis.md`.
+## Docker
 
-Hybrid retrieval was chosen because semantic similarity handles paraphrase while BM25 rewards exact source terminology. On this small evaluation set, the .75/.25 setting had the highest observed Recall@1 and MRR; .50/.50 had higher Recall@3, so the choice is documented as a measured trade-off, not a general theorem.
+Build from the repository root:
 
-## q009 controlled terminology-aligned ablation
+```powershell
+docker build -t rag-research-assistant:local .
+```
 
-The final predeclared control is the original q009 question. The single aligned query is:
+Run the CLI without generation (no API key needed):
 
-> How can SELF-RAG use a Retrieve=Yes threshold, Critique/reflection-token weighted decoding including ISSUP support, and hard Critique-token filtering to control retrieval, evidence grounding, and generation quality at inference time with no additional training?
+```powershell
+docker run --rm rag-research-assistant:local scripts/ask.py --no-generation "What are reflection tokens?"
+```
 
-Its terms are taken directly from `paper1_c0027`–`paper1_c0030`. It changes **only** query wording; it freezes the 127 chunks, metadata, model, BM25, .75/.25 weighting, relevance judgments, ranking policy, and final-k, with no reranking, MultiQuery, or fusion. `scripts/evaluate_q009_terminology_ablation.py` persists per-chunk semantic/BM25/hybrid ranks and scores, top-10/top-30 entry, Recall@10/@30, evidence coverage, and q009 MRR when the model dependency is available.
+For live generation, pass credentials only at runtime:
 
-**Current execution status: not_run in this environment.** Python 3.14.4 lacks `sentence_transformers` (and its compatible Torch stack), so no q009 ranks or metrics were fabricated. The persisted status and exact query are in `evaluation/q009_terminology_aligned_ablation.json`. Run the command in a supported environment before making any production retrieval change. Therefore the simpler measured .75/.25 baseline remains selected.
+```powershell
+docker run --rm -e GEMINI_API_KEY="your-key" rag-research-assistant:local scripts/ask.py "What are reflection tokens?"
+```
 
-## Repository map and reproducibility
+Run tests in the image:
 
-| Need | Location / command |
-| --- | --- |
-| Add source PDFs | `data/raw/` |
-| Ingest and build a manifest | `python scripts/build_gold_retrieval_set.py` (see script arguments) |
-| Ask with generation | `GEMINI_API_KEY=... python scripts/ask.py "What are reflection tokens?"` |
-| Inspect retrieved evidence without an LLM | `python scripts/ask.py --no-generation "What are reflection tokens?"` |
-| Lexical baseline evaluation | `python scripts/evaluate_retrieval.py` |
-| Semantic/hybrid evaluation | `python scripts/evaluate_semantic_retrieval.py` |
-| Final q009 controlled ablation | `python scripts/evaluate_q009_terminology_ablation.py` |
-| Tests | `pytest -q` |
+```powershell
+docker run --rm rag-research-assistant:local -m pytest -q
+```
 
-Install dependencies using a Python version supported by the pinned `sentence-transformers`/Torch packages: `python -m pip install -r requirements.txt`. Semantic evaluation may download the embedding model on its first run. `GEMINI_API_KEY` is required only for live generation; `--no-generation` does not call a provider. Generated answer citations are accepted only when their `document_id`, `chunk_id`, and page match retrieved evidence.
+Run the lexical retrieval evaluation without secrets:
 
-## Grounding, failure handling, and observability
+```powershell
+docker run --rm rag-research-assistant:local scripts/evaluate_retrieval.py
+```
 
-Retrieved context is explicitly marked as untrusted data in the prompt. Empty retrieval returns `insufficient_evidence` instead of calling a model; no-provider mode returns evidence and traceable citations without pretending an answer was generated. Provider responses must be JSON and their citations are validated against selected chunks/pages. These measures reduce unsupported answers but do not guarantee zero hallucinations; a model can still give a weakly supported answer if retrieval is weak.
+The image contains source, scripts, the reviewed chunk manifest, and evaluation inputs. It excludes `.env`, local Python environments, model/download caches, and persisted result/trace artifacts. The sentence-transformer model is downloaded on first semantic use and cached in the container's temporary cache. To retain that cache or generated outputs, mount an appropriate writable volume.
 
-Evaluation runs preserve question text, relevance labels, ranked chunks, scores, pages, sections, and relevance flags. Metrics are recomputed from traces and reject label drift. Historical MultiQuery, fusion, candidate-reachability, and reranking work remains under `src/`/`evaluation/` for inspection but is not on the production dependency path.
+## Limitations
 
-## Failure analysis and limits
-
-The retained analysis investigates retrieval failures at question, candidate-rank, chunk, and fusion levels. q009 requires distributed evidence across four chunks and was a top-10 miss in the frozen baseline; the planned aligned-query result must be measured before it can influence production. The project is intentionally limited by PDF extraction quality (especially scans/OCR, tables, equations, and unusual layouts), a small domain-specific evaluation set, embedding-model limitations, provider availability/rate limits, and local inference resources.
-
-## Portfolio engineering focus
-
-This project demonstrates a compact RAG architecture with hybrid retrieval, evaluation-first development, controlled retrieval experiments, failure analysis, grounding and citation validation, structured request traces, reproducibility artifacts, and explicit complexity/quality trade-offs. It does not claim deployment at enterprise scale, autonomous research, perfect retrieval, or hallucination-free generation.
-
-## Additional records
-
-Architecture decisions: `docs/adr/ADR-001-through-008.md`. Historical experiments and analyses: `evaluation/`. The tracked artifacts distinguish the current baseline from rejected or unselected experiments.
+The evaluation set is small and domain-specific. PDF extraction can lose information in scans, tables, equations, and unusual layouts. Model downloads and Gemini generation need network access; generation needs a user-supplied API key. Retrieval or citation validation reduces unsupported output but cannot guarantee factual correctness. The container is a CLI deployment, not an HTTP service, and local inference resources may constrain performance.

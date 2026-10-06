@@ -1,0 +1,31 @@
+# Credentials and local environment configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Local Python environments, bytecode, and test/tool caches
+.venv/
+venv/
+env/
+.res/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Model/download caches and generated local files
+.cache/
+cache/
+model_cache/
+models/
+outputs/
+*.log
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.git/
