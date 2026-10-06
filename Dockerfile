@@ -24,5 +24,4 @@ RUN useradd --create-home --uid 10001 app \
     && chown -R app:app /app /tmp/huggingface
 USER app
 
-ENTRYPOINT ["python"]
-CMD ["scripts/ask.py", "--help"]
+ENTRYPOINT ["python", "scripts/docker_entrypoint.py"]
